@@ -57,14 +57,35 @@ export function Sidebar({
     "pt-BR" | "en-US" | "es-ES"
   >("pt-BR");
 
-  // Dados do usuário logado (normalmente viriam de um contexto ou API)
-  const loggedUser: LoggedUser = {
-    name: "João Silva",
-    email: "joao@email.com",
-    plan: "premium",
-    role: "admin", // admin ou user
-    avatar: undefined, // Para usar o ícone padrão
+  // Carregar dados do usuário logado do localStorage
+  const getUserData = (): LoggedUser => {
+    try {
+      const savedSettings = localStorage.getItem("studyai-settings");
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        return {
+          name: settings.name || "João Silva",
+          email: settings.email || "joao@email.com",
+          plan: "premium",
+          role: "admin", // admin ou user
+          avatar: settings.avatar || undefined,
+        };
+      }
+    } catch (error) {
+      console.error("Erro ao carregar dados do usuário:", error);
+    }
+
+    // Fallback para dados padrão
+    return {
+      name: "João Silva",
+      email: "joao@email.com",
+      plan: "premium",
+      role: "admin",
+      avatar: undefined,
+    };
   };
+
+  const loggedUser = getUserData();
 
   const toggleLanguage = () => {
     try {
