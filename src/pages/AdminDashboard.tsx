@@ -287,6 +287,21 @@ export default function AdminDashboard() {
     );
   };
 
+  const handlePromoteToPremium = (userId: number) => {
+    const user = users.find((u) => u.id === userId);
+    if (!user) return;
+
+    const confirm = window.confirm(
+      `Tem certeza que deseja promover ${user.name} para Premium gratuitamente?\n\nEsta ação não gerará cobrança.`,
+    );
+
+    if (confirm) {
+      handleUserAction(userId, "premium");
+      // Toast ou notificação de sucesso poderia ser adicionada aqui
+      alert(`${user.name} foi promovido para Premium com sucesso!`);
+    }
+  };
+
   const handleDeleteUser = (userId: number) => {
     const confirm = window.confirm(
       "Tem certeza que deseja excluir este usuário?",
@@ -541,7 +556,7 @@ export default function AdminDashboard() {
                             Backup concluído
                           </p>
                           <p className="text-xs text-green-700">
-                            Último backup: hoje às 03:00
+                            Último backup: hoje ��s 03:00
                           </p>
                         </div>
                       </div>
