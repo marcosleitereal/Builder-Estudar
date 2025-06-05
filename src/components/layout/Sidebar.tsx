@@ -22,11 +22,20 @@ import {
   Medal,
   Star,
   Target,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { QuickStats } from "./QuickStats";
 import { BrazilFlag, USAFlag, SpainFlag } from "@/components/ui/flags";
+
+interface LoggedUser {
+  name: string;
+  email: string;
+  plan: "free" | "premium";
+  avatar?: string;
+}
 
 interface SidebarProps {
   onClose?: () => void;
@@ -45,6 +54,14 @@ export function Sidebar({
   const [currentLanguage, setCurrentLanguage] = useState<
     "pt-BR" | "en-US" | "es-ES"
   >("pt-BR");
+
+  // Dados do usuário logado (normalmente viriam de um contexto ou API)
+  const loggedUser: LoggedUser = {
+    name: "João Silva",
+    email: "joao@email.com",
+    plan: "premium",
+    avatar: undefined, // Para usar o ícone padrão
+  };
 
   const toggleLanguage = () => {
     try {
