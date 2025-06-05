@@ -475,6 +475,72 @@ export default function Settings() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Foto de Perfil */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 p-4 bg-muted/30 rounded-lg">
+                    <div className="flex-shrink-0">
+                      <div className="relative">
+                        <div className="w-24 h-24 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-full flex items-center justify-center overflow-hidden">
+                          {settings.avatar ? (
+                            <img
+                              src={settings.avatar}
+                              alt="Foto de perfil"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <User className="h-12 w-12 text-white" />
+                          )}
+                        </div>
+
+                        {/* Loading overlay */}
+                        {isUploadingAvatar && (
+                          <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
+                            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex-1">
+                      <h3 className="font-medium mb-2">Foto de Perfil</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Escolha uma foto que o represente. Formatos aceitos:
+                        JPG, PNG, GIF. Tamanho máximo: 5MB.
+                      </p>
+
+                      <div className="flex gap-2">
+                        <div className="relative">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarUpload}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            disabled={isUploadingAvatar}
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            disabled={isUploadingAvatar}
+                          >
+                            <Camera className="h-4 w-4 mr-2" />
+                            {isUploadingAvatar ? "Enviando..." : "Alterar Foto"}
+                          </Button>
+                        </div>
+
+                        {settings.avatar && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleRemoveAvatar}
+                            disabled={isUploadingAvatar}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Remover
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name">Nome Completo</Label>
