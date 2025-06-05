@@ -11,6 +11,8 @@ const pages = [
   { name: "Assinatura", path: "/subscription", color: "bg-orange-500" },
   { name: "Configurações", path: "/settings", color: "bg-gray-500" },
   { name: "Login", path: "/login", color: "bg-red-500" },
+  { name: "Admin", path: "/admin", color: "bg-red-600" },
+  { name: "Esqueci Senha", path: "/forgot-password", color: "bg-pink-500" },
 ];
 
 export function QuickNav() {
@@ -37,7 +39,7 @@ export function QuickNav() {
         >
           <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-xl p-4 min-w-[200px]">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-sm">Navegação Rápida</h3>
+              <h3 className="font-semibold text-sm">Navegaç��o Rápida</h3>
               <Button
                 variant="ghost"
                 size="sm"

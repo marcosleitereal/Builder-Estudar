@@ -14,6 +14,8 @@ import Notifications from "./pages/Notifications";
 import Subscription from "./pages/Subscription";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +36,8 @@ const App = () => (
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
