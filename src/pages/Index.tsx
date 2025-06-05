@@ -1,5 +1,6 @@
 import { MainLayout } from "@/components/layout/MainLayout";
 import { GeneratePanel } from "@/components/study/GeneratePanel";
+import { WelcomeBanner } from "@/components/study/WelcomeBanner";
 
 const Index = () => {
   return (
@@ -15,10 +16,10 @@ const Index = () => {
           </p>
         </div>
 
+        <WelcomeBanner />
         <GeneratePanel />
       </div>
     </MainLayout>
   );
 };
-
 export default Index;
