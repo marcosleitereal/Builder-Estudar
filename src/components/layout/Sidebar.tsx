@@ -297,15 +297,16 @@ export function Sidebar({ onClose }: SidebarProps) {
                     </span>
                   </div>
                 )}
+              {section.subtitle && !section.isLanguageSelector && (
+                <div className="text-xs text-sidebar-foreground/60">
                   {section.subtitle}
                 </div>
               )}
               {section.isLanguageSelector && (
                 <div className="text-xs text-sidebar-foreground/60 mt-1">
-                  {currentLanguage === "pt-BR"
-                    ? "Clique para alterar para English"
-                    : "Click to change to Português"}
+                  {currentLanguage === 'pt-BR' ? 'Clique para alterar para English' : 'Click to change to Português'}
                 </div>
+              )}
               )}
             </div>
           </Button>
