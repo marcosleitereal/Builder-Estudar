@@ -315,6 +315,94 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleCreateUser = async () => {
+    // Validações
+    if (!newUser.name || !newUser.email || !newUser.password) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    if (newUser.password !== newUser.confirmPassword) {
+      alert("As senhas não coincidem.");
+      return;
+    }
+
+    if (newUser.password.length < 6) {
+      alert("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    // Verificar se email já existe
+    if (users.some((user) => user.email === newUser.email)) {
+      alert("Este email já está em uso.");
+      return;
+    }
+
+    setIsCreatingUser(true);
+
+    try {
+      // Simular criação de usuário
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      const newUserData: User = {
+        id: Date.now(),
+        name: newUser.name,
+        email: newUser.email,
+        plan: newUser.plan,
+        status: "active",
+        joinDate: new Date().toISOString().split("T")[0],
+        lastActive: new Date().toISOString().split("T")[0],
+      };
+
+      setUsers((prev) => [...prev, newUserData]);
+
+      // Resetar formulário
+      setNewUser({
+        name: "",
+        email: "",
+        plan: "free",
+        role: "user",
+        password: "",
+        confirmPassword: "",
+      });
+
+      setShowNewUserModal(false);
+
+      const roleText =
+        newUser.role === "admin"
+          ? "Administrador"
+          : newUser.plan === "premium"
+            ? "Premium"
+            : "Gratuito";
+
+      alert(`Usuário ${newUser.name} (${roleText}) criado com sucesso!`);
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+      alert("Erro ao criar usuário. Tente novamente.");
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
+
+  const handleCancelNewUser = () => {
+    if (newUser.name || newUser.email || newUser.password) {
+      const confirm = window.confirm(
+        "Tem certeza que deseja cancelar? Os dados serão perdidos.",
+      );
+      if (!confirm) return;
+    }
+
+    setNewUser({
+      name: "",
+      email: "",
+      plan: "free",
+      role: "user",
+      password: "",
+      confirmPassword: "",
+    });
+    setShowNewUserModal(false);
+  };
+
   const handleDeleteUser = (userId: number) => {
     const confirm = window.confirm(
       "Tem certeza que deseja excluir este usuário?",
