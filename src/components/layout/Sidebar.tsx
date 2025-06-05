@@ -47,11 +47,17 @@ export function Sidebar({
   >("pt-BR");
 
   const toggleLanguage = () => {
-    setCurrentLanguage((prev) => {
-      if (prev === "pt-BR") return "en-US";
-      if (prev === "en-US") return "es-ES";
-      return "pt-BR";
-    });
+    try {
+      setCurrentLanguage((prev) => {
+        console.log("Idioma atual:", prev);
+        const nextLanguage =
+          prev === "pt-BR" ? "en-US" : prev === "en-US" ? "es-ES" : "pt-BR";
+        console.log("Próximo idioma:", nextLanguage);
+        return nextLanguage;
+      });
+    } catch (error) {
+      console.error("Erro ao alternar idioma:", error);
+    }
   };
 
   const getLanguageDisplay = () => {
