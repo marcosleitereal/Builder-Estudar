@@ -39,6 +39,14 @@ interface LoggedUser {
   avatar?: string;
 }
 
+interface SidebarSection {
+  title: string;
+  icon: any;
+  onClick: () => void;
+  variant?: "destructive" | "admin";
+  isLanguageSelector?: boolean;
+}
+
 interface SidebarProps {
   onClose?: () => void;
   isCollapsed?: boolean;
@@ -276,23 +284,27 @@ export function Sidebar({
     },
   ];
 
-  const bottomSections = [
+  // Criar seções base
+  const baseSections: SidebarSection[] = [
     {
       title: t.settings,
       icon: Settings,
       onClick: () => (window.location.href = "/settings"),
     },
-    // Botão de admin - só aparece para administradores
-    ...(loggedUser.role === "admin"
-      ? [
-          {
-            title: t.adminPanel,
-            icon: Shield,
-            onClick: () => (window.location.href = "/admin"),
-            variant: "admin" as const,
-          },
-        ]
-      : []),
+  ];
+
+  // Adicionar botão admin se for administrador
+  if (loggedUser.role === "admin") {
+    baseSections.push({
+      title: t.adminPanel,
+      icon: Shield,
+      onClick: () => (window.location.href = "/admin"),
+      variant: "admin",
+    });
+  }
+
+  // Adicionar seções finais
+  baseSections.push(
     {
       title: t.language,
       icon: Languages,
@@ -302,7 +314,7 @@ export function Sidebar({
     {
       title: t.logout,
       icon: LogOut,
-      variant: "destructive" as const,
+      variant: "destructive",
       onClick: () => {
         const confirm = window.confirm(
           currentLanguage === "pt-BR"
@@ -317,7 +329,9 @@ export function Sidebar({
         }
       },
     },
-  ];
+  );
+
+  const bottomSections = baseSections;
 
   return (
     <div
