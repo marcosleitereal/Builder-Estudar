@@ -33,29 +33,29 @@ export function GeneratePanel() {
   const outputTypes = [
     {
       id: "questions",
-      label: "Questions",
-      description: "Generate practice questions and quizzes",
+      label: "Questões",
+      description: "Gerar questões práticas e questionários",
       icon: Brain,
       color: "text-burnt-600",
     },
     {
       id: "summary",
-      label: "Summary",
-      description: "Create concise summaries and key points",
+      label: "Resumo",
+      description: "Criar resumos concisos e pontos-chave",
       icon: FileText,
       color: "text-terracotta-600",
     },
     {
       id: "flashcards",
       label: "Flashcards",
-      description: "Interactive flashcards for memorization",
+      description: "Flashcards interativos para memorização",
       icon: Lightbulb,
       color: "text-sandstone-700",
     },
     {
       id: "mindmap",
-      label: "Mind Map",
-      description: "Visual mind maps and concept diagrams",
+      label: "Mapa Mental",
+      description: "Mapas mentais visuais e diagramas conceituais",
       icon: BookOpen,
       color: "text-burnt-700",
     },
@@ -122,11 +122,10 @@ export function GeneratePanel() {
             <div className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-lg flex items-center justify-center">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
-            Generate Personalized Study Material
+            Gerar Material de Estudo Personalizado
           </CardTitle>
           <CardDescription className="text-burnt-700/80">
-            Transform your content into interactive study materials powered by
-            AI
+            Transforme seu conteúdo em materiais de estudo interativos com IA
           </CardDescription>
         </CardHeader>
 
