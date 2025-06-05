@@ -349,7 +349,6 @@ export function Sidebar({
           window.location.reload();
         }
       },
-    }
     },
   );
 
