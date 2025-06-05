@@ -120,6 +120,9 @@ export function Sidebar({
       logout: "Sair",
       progress: "Seu Progresso",
       platform: "Plataforma de Aprendizado com IA",
+      planFree: "Gratuito",
+      planPremium: "Premium",
+      userProfile: "Perfil do Usuário",
     },
     "en-US": {
       studyHistory: "Study History",
@@ -143,6 +146,9 @@ export function Sidebar({
       logout: "Logout",
       progress: "Your Progress",
       platform: "AI-Powered Learning Platform",
+      planFree: "Free",
+      planPremium: "Premium",
+      userProfile: "User Profile",
     },
     "es-ES": {
       studyHistory: "Historial de Estudios",
@@ -166,6 +172,9 @@ export function Sidebar({
       logout: "Cerrar Sesión",
       progress: "Tu Progreso",
       platform: "Plataforma de Aprendizaje con IA",
+      planFree: "Gratuito",
+      planPremium: "Premium",
+      userProfile: "Perfil de Usuario",
     },
   };
 
