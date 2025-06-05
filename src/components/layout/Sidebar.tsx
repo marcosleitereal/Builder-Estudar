@@ -43,8 +43,6 @@ export function Sidebar({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<'pt-BR' | 'en-US' | 'es-ES'>('pt-BR');
-    "pt-BR",
-  );
 
   const toggleLanguage = () => {
     setCurrentLanguage(prev => {

@@ -178,9 +178,17 @@ export default function StudyHistory() {
   const [typeFilter, setTypeFilter] = useState("todos");
   const [performanceFilter, setPerformanceFilter] = useState("todos");
   const [dateFilter, setDateFilter] = useState("todos");
+  const [studyDataState, setStudyDataState] = useState(studyData);
+
+  // Atualizar filteredData para usar o estado local
+  const setFilteredData = (
+    updateFn: (prev: typeof studyData) => typeof studyData,
+  ) => {
+    setStudyDataState(updateFn);
+  };
 
   const filteredData = useMemo(() => {
-    return studyData.filter((item) => {
+    return studyDataState.filter((item) => {
       // Filtro de busca
       const matchesSearch =
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -242,7 +250,7 @@ export default function StudyHistory() {
 
       return matchesSearch && matchesType && matchesPerformance && matchesDate;
     });
-  }, [searchTerm, typeFilter, performanceFilter, dateFilter]);
+  }, [searchTerm, typeFilter, performanceFilter, dateFilter, studyDataState]);
 
   const getPerformanceBadge = (performance: number) => {
     if (performance >= 90)
@@ -268,8 +276,52 @@ export default function StudyHistory() {
   };
 
   const handleAction = (action: string, itemId: number) => {
-    console.log(`Ação: ${action} para item ${itemId}`);
-    // Aqui implementaria as ações específicas
+    const item = filteredData.find((item) => item.id === itemId);
+    if (!item) return;
+
+    switch (action) {
+      case "view":
+        // Redirecionar para a página específica baseada no tipo
+        if (item.type === "resumo") {
+          window.location.href = `/summary/${itemId}`;
+        } else if (item.type === "flashcard") {
+          window.location.href = `/flashcards/${itemId}`;
+        } else if (item.type === "mapa_mental") {
+          window.location.href = `/mindmap/${itemId}`;
+        } else if (item.type === "simulado") {
+          // Implementar visualização de simulado
+          alert(`Visualizando simulado: ${item.title}`);
+        }
+        break;
+
+      case "edit":
+        // Implementar edição baseada no tipo
+        const confirmEdit = window.confirm(`Deseja editar "${item.title}"?`);
+        if (confirmEdit) {
+          alert(`Editando: ${item.title}`);
+          // Aqui implementaria a lógica de edição específica
+        }
+        break;
+
+      case "delete":
+        const confirmDelete = window.confirm(
+          `Tem certeza que deseja excluir "${item.title}"?\n\nEsta ação não pode ser desfeita.`,
+        );
+        if (confirmDelete) {
+          // Remover item do estado
+          setFilteredData((prev) => prev.filter((i) => i.id !== itemId));
+          alert(`"${item.title}" foi excluído com sucesso.`);
+        }
+        break;
+
+      case "menu":
+        // Menu de contexto - implementar se necessário
+        console.log(`Menu para ${item.title}`);
+        break;
+
+      default:
+        console.log(`Ação desconhecida: ${action} para item ${itemId}`);
+    }
   };
 
   const handleBackToDashboard = () => {
@@ -308,7 +360,7 @@ export default function StudyHistory() {
                     Histórico de Estudos
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    {filteredData.length} de {studyData.length} itens
+                    {filteredData.length} de {studyDataState.length} itens
                     encontrados
                   </p>
                 </div>
