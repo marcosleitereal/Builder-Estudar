@@ -11,7 +11,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Inicia colapsa por padrão
+  const [sidebarExpanded, setSidebarExpanded] = useState(false); // Controla se está expandida permanentemente
   const [isHovering, setIsHovering] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -22,8 +22,9 @@ export function MainLayout({ children }: MainLayoutProps) {
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target as Node)
       ) {
-        setSidebarCollapsed(true);
-        setIsHovering(false); // Reset hover state
+        // Ao clicar fora, colapsa permanentemente
+        setSidebarExpanded(false);
+        setIsHovering(false);
       }
     }
 
@@ -32,6 +33,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Determina se a sidebar deve estar expandida
+  const shouldExpand = sidebarExpanded || isHovering;
 
   return (
     <div className="flex h-screen bg-background">
@@ -50,25 +54,26 @@ export function MainLayout({ children }: MainLayoutProps) {
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-500 ease-out lg:relative lg:translate-x-0 group",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          sidebarCollapsed && !isHovering ? "w-16" : "w-64",
+          shouldExpand ? "w-64" : "w-16",
         )}
         onMouseEnter={() => {
           setIsHovering(true);
+          // Quando passa o mouse e está colapsa, expande permanentemente
+          if (!sidebarExpanded) {
+            setSidebarExpanded(true);
+          }
         }}
         onMouseLeave={() => {
-          // Não colapsa automaticamente quando o mouse sai
-          // Mantém expandida até clicar fora
           setIsHovering(false);
+          // NÃO colapsa quando o mouse sai - mantém expandida
         }}
       >
         <Sidebar
           onClose={() => setSidebarOpen(false)}
-          isCollapsed={sidebarCollapsed && !isHovering}
+          isCollapsed={!shouldExpand}
           onToggleCollapse={() => {
-            setSidebarCollapsed(!sidebarCollapsed);
-            if (!sidebarCollapsed) {
-              setIsHovering(false); // Reset hover ao colapsar manualmente
-            }
+            setSidebarExpanded(!sidebarExpanded);
+            setIsHovering(false);
           }}
         />
       </div>
