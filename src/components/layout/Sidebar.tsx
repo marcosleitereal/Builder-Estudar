@@ -514,11 +514,7 @@ export function Sidebar({
           <div className="flex-shrink-0 relative group">
             <div
               className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
-              title={
-                isCollapsed
-                  ? `${loggedUser.name} (${loggedUser.plan === "premium" ? t.planPremium : t.planFree})`
-                  : undefined
-              }
+              title={isCollapsed ? `${loggedUser.name} (${loggedUser.plan === "premium" ? t.planPremium : loggedUser.plan === "premium-admin" ? t.planPremiumAdmin : t.planFree})` : undefined}
               onClick={() => (window.location.href = "/settings")}
             >
               {loggedUser.avatar ? (
@@ -548,21 +544,26 @@ export function Sidebar({
           </div>
 
           {/* User Info - só mostra quando expandida */}
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <p className="text-sm font-medium text-sidebar-foreground truncate">
-                  {loggedUser.name}
-                </p>
+            {isCollapsed && (
+              <div className={cn(
+                "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold",
+                loggedUser.plan === "premium"
+                  ? "bg-yellow-400 text-yellow-900"
+                  : loggedUser.plan === "premium-admin"
+                  ? "bg-green-400 text-green-900"
+                  : "bg-gray-400 text-gray-900"
+              )}>
                 <Badge
                   className={cn(
                     "text-xs px-2 py-0.5",
                     loggedUser.plan === "premium"
                       ? "bg-yellow-100 text-yellow-700 border-yellow-200"
-                      : "bg-gray-100 text-gray-700 border-gray-200",
+                      : loggedUser.plan === "premium-admin"
+                      ? "bg-green-100 text-green-700 border-green-200"
+                      : "bg-gray-100 text-gray-700 border-gray-200"
                   )}
                 >
-                  {loggedUser.plan === "premium" ? t.planPremium : t.planFree}
+                  {loggedUser.plan === "premium" ? t.planPremium : loggedUser.plan === "premium-admin" ? t.planPremiumAdmin : t.planFree}
                 </Badge>
               </div>
               <p className="text-xs text-sidebar-foreground/60 truncate">
