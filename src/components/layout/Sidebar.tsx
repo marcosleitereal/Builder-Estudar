@@ -298,7 +298,15 @@ export function Sidebar({
     baseSections.push({
       title: t.adminPanel,
       icon: Shield,
-      onClick: () => (window.location.href = "/admin"),
+      onClick: () => {
+        try {
+          window.location.href = "/admin";
+        } catch (error) {
+          console.error("Erro ao navegar para admin:", error);
+          // Fallback para navegação direta
+          window.open("/admin", "_self");
+        }
+      },
       variant: "admin",
     });
   }
