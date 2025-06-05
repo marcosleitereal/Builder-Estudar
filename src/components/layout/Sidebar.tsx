@@ -25,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QuickStats } from "./QuickStats";
+import { BrazilFlag, USAFlag } from "@/components/ui/flags";
 
 interface SidebarProps {
   onClose?: () => void;
@@ -47,7 +48,7 @@ export function Sidebar({ onClose }: SidebarProps) {
   };
 
   const getLanguageFlag = () => {
-    return currentLanguage === "pt-BR" ? "🇧🇷" : "🇺🇸";
+    return currentLanguage === 'pt-BR' ? <BrazilFlag size={16} /> : <USAFlag size={16} />;
   };
 
   const getLanguageInfo = () => {
@@ -167,7 +168,7 @@ export function Sidebar({ onClose }: SidebarProps) {
     {
       title: t.language,
       icon: Languages,
-      subtitle: `${getLanguageFlag()} ${getLanguageDisplay()}`,
+      subtitle: getLanguageDisplay(),
       flag: getLanguageFlag(),
       onClick: toggleLanguage,
       isLanguageSelector: true,
@@ -289,18 +290,13 @@ export function Sidebar({ onClose }: SidebarProps) {
               <div className="flex items-center gap-2">
                 <span>{section.title}</span>
                 {section.isLanguageSelector && (
-                  <div className="ml-auto flex items-center gap-1 px-2 py-1 bg-burnt-100 rounded-md">
-                    <span className="text-base leading-none">
-                      {getLanguageFlag()}
-                    </span>
+                  <div className="ml-auto flex items-center gap-2 px-2 py-1 bg-burnt-100 rounded-md">
+                    {getLanguageFlag()}
                     <span className="text-xs font-medium text-burnt-700">
-                      {currentLanguage === "pt-BR" ? "PT" : "EN"}
+                      {currentLanguage === 'pt-BR' ? 'PT' : 'EN'}
                     </span>
                   </div>
                 )}
-              </div>
-              {section.subtitle && !section.isLanguageSelector && (
-                <div className="text-xs text-sidebar-foreground/60">
                   {section.subtitle}
                 </div>
               )}
