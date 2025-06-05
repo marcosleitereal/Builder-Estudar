@@ -1,33 +1,56 @@
 import { Brain, Target, Clock, Trophy } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function QuickStats() {
+interface QuickStatsProps {
+  language?: "pt-BR" | "en-US";
+}
+
+export function QuickStats({ language = "pt-BR" }: QuickStatsProps) {
+  const texts = {
+    "pt-BR": {
+      progress: "Seu Progresso",
+      studySessions: "Sessões de Estudo",
+      accuracyRate: "Taxa de Acerto",
+      studyTime: "Tempo de Estudo",
+      achievements: "Conquistas",
+    },
+    "en-US": {
+      progress: "Your Progress",
+      studySessions: "Study Sessions",
+      accuracyRate: "Accuracy Rate",
+      studyTime: "Study Time",
+      achievements: "Achievements",
+    },
+  };
+
+  const t = texts[language];
+
   const stats = [
     {
       icon: Brain,
       value: "24",
-      label: "Sessões de Estudo",
+      label: t.studySessions,
       color: "text-burnt-600",
       bgColor: "bg-burnt-100",
     },
     {
       icon: Target,
       value: "89%",
-      label: "Taxa de Acerto",
+      label: t.accuracyRate,
       color: "text-terracotta-600",
       bgColor: "bg-terracotta-100",
     },
     {
       icon: Clock,
       value: "12h",
-      label: "Tempo de Estudo",
+      label: t.studyTime,
       color: "text-sandstone-700",
       bgColor: "bg-sandstone-100",
     },
     {
       icon: Trophy,
       value: "8",
-      label: "Conquistas",
+      label: t.achievements,
       color: "text-burnt-700",
       bgColor: "bg-burnt-100",
     },
@@ -36,7 +59,7 @@ export function QuickStats() {
   return (
     <div className="p-4 border-t border-sidebar-border">
       <h3 className="text-sm font-medium text-sidebar-foreground mb-3">
-        Seu Progresso
+        {t.progress}
       </h3>
       <div className="grid grid-cols-2 gap-2">
         {stats.map((stat, index) => (

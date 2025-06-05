@@ -258,7 +258,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Quick Stats */}
-      <QuickStats />
+      <QuickStats language={currentLanguage} />
 
       {/* Bottom section */}
       <div className="border-t border-sidebar-border p-4 space-y-2">
