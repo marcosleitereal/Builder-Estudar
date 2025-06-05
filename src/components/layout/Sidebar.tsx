@@ -122,7 +122,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       isExpandable: true,
       isOpen: studyHistoryOpen,
       onToggle: () => setStudyHistoryOpen(!studyHistoryOpen),
-      onClick: () => window.location.href = '/history',
+      onClick: () => (window.location.href = "/history"),
       children: [
         { title: t.drafts, icon: FileText, count: 3 },
         { title: t.simulatedExams, icon: Brain, count: 5 },
@@ -217,10 +217,9 @@ export function Sidebar({ onClose }: SidebarProps) {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  section.isExpandable && "pr-2"
+                  section.isExpandable && "pr-2",
                 )}
                 onClick={section.onClick || section.onToggle}
-              >
               >
                 <section.icon className="mr-3 h-4 w-4" />
                 <span className="flex-1 text-left">{section.title}</span>
