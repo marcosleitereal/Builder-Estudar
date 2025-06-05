@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import SummaryView from "./pages/SummaryView";
 import FlashcardsStudy from "./pages/FlashcardsStudy";
 import MindMapView from "./pages/MindMapView";
+import StudyHistory from "./pages/StudyHistory";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/summary/:id" element={<SummaryView />} />
           <Route path="/flashcards/:id" element={<FlashcardsStudy />} />
           <Route path="/mindmap/:id" element={<MindMapView />} />
+          <Route path="/history" element={<StudyHistory />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
