@@ -34,7 +34,7 @@ import { BrazilFlag, USAFlag, SpainFlag } from "@/components/ui/flags";
 interface LoggedUser {
   name: string;
   email: string;
-  plan: "free" | "premium";
+  plan: "free" | "premium" | "premium-admin";
   role: "user" | "admin";
   avatar?: string;
 }
