@@ -67,9 +67,16 @@ export function Sidebar({
   };
 
   const getLanguageFlag = () => {
-    if (currentLanguage === "pt-BR") return <BrazilFlag size={16} />;
-    if (currentLanguage === "en-US") return <USAFlag size={16} />;
-    return <SpainFlag size={16} />;
+    try {
+      console.log("Renderizando bandeira para:", currentLanguage);
+      if (currentLanguage === "pt-BR") return <BrazilFlag size={16} />;
+      if (currentLanguage === "en-US") return <USAFlag size={16} />;
+      if (currentLanguage === "es-ES") return <SpainFlag size={16} />;
+      return <BrazilFlag size={16} />; // fallback
+    } catch (error) {
+      console.error("Erro ao renderizar bandeira:", error);
+      return <BrazilFlag size={16} />;
+    }
   };
 
   // Textos dinâmicos baseados no idioma selecionado
