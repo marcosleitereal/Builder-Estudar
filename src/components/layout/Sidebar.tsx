@@ -514,7 +514,11 @@ export function Sidebar({
           <div className="flex-shrink-0 relative group">
             <div
               className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
-              title={isCollapsed ? `${loggedUser.name} (${loggedUser.plan === "premium" ? t.planPremium : loggedUser.plan === "premium-admin" ? t.planPremiumAdmin : t.planFree})` : undefined}
+              title={
+                isCollapsed
+                  ? `${loggedUser.name} (${loggedUser.plan === "premium" ? t.planPremium : loggedUser.plan === "premium-admin" ? t.planPremiumAdmin : t.planFree})`
+                  : undefined
+              }
               onClick={() => (window.location.href = "/settings")}
             >
               {loggedUser.avatar ? (
@@ -535,25 +539,16 @@ export function Sidebar({
                   "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold",
                   loggedUser.plan === "premium"
                     ? "bg-yellow-400 text-yellow-900"
-                    : "bg-gray-400 text-gray-900",
+                    : loggedUser.plan === "premium-admin"
+                      ? "bg-green-400 text-green-900"
+                      : "bg-gray-400 text-gray-900",
                 )}
               >
-                {loggedUser.plan === "premium" ? "P" : "F"}
-              </div>
-            )}
-          </div>
-
-          {/* Badge do plano - aparece no canto quando colapsada */}
-            {isCollapsed && (
-              <div className={cn(
-                "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold",
-                loggedUser.plan === "premium"
-                  ? "bg-yellow-400 text-yellow-900"
+                {loggedUser.plan === "premium"
+                  ? "P"
                   : loggedUser.plan === "premium-admin"
-                  ? "bg-green-400 text-green-900"
-                  : "bg-gray-400 text-gray-900"
-              )}>
-                {loggedUser.plan === "premium" ? "P" : loggedUser.plan === "premium-admin" ? "G" : "F"}
+                    ? "G"
+                    : "F"}
               </div>
             )}
           </div>
@@ -571,11 +566,15 @@ export function Sidebar({
                     loggedUser.plan === "premium"
                       ? "bg-yellow-100 text-yellow-700 border-yellow-200"
                       : loggedUser.plan === "premium-admin"
-                      ? "bg-green-100 text-green-700 border-green-200"
-                      : "bg-gray-100 text-gray-700 border-gray-200"
+                        ? "bg-green-100 text-green-700 border-green-200"
+                        : "bg-gray-100 text-gray-700 border-gray-200",
                   )}
                 >
-                  {loggedUser.plan === "premium" ? t.planPremium : loggedUser.plan === "premium-admin" ? t.planPremiumAdmin : t.planFree}
+                  {loggedUser.plan === "premium"
+                    ? t.planPremium
+                    : loggedUser.plan === "premium-admin"
+                      ? t.planPremiumAdmin
+                      : t.planFree}
                 </Badge>
               </div>
               <p className="text-xs text-sidebar-foreground/60 truncate">
@@ -592,11 +591,7 @@ export function Sidebar({
           <Button
             key={section.title}
             variant={
-              section.variant === "destructive"
-                ? "destructive"
-                : section.variant === "admin"
-                  ? "ghost"
-                  : "ghost"
+              section.variant === "destructive" ? "destructive" : "ghost"
             }
             className={cn(
               "w-full justify-start",
