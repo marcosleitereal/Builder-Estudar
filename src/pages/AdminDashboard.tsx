@@ -1581,21 +1581,28 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="user-confirm-password">
-                    Confirmar Senha *
-                  </Label>
+                  <Label htmlFor="user-confirm-password">Confirmar Senha *</Label>
                   <Input
                     id="user-confirm-password"
                     type="password"
                     placeholder="Digite a senha novamente"
                     value={newUser.confirmPassword}
-                    onChange={(e) =>
-                      setNewUser((prev) => ({
-                        ...prev,
-                        confirmPassword: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => setNewUser(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                    className={cn(
+                      newUser.confirmPassword && newUser.password !== newUser.confirmPassword
+                        ? "border-red-300 focus:border-red-400"
+                        : newUser.confirmPassword && newUser.password === newUser.confirmPassword
+                        ? "border-green-300 focus:border-green-400"
+                        : ""
+                    )}
                   />
+                  {newUser.confirmPassword && newUser.password !== newUser.confirmPassword && (
+                    <p className="text-xs text-red-600">As senhas não coincidem</p>
+                  )}
+                  {newUser.confirmPassword && newUser.password === newUser.confirmPassword && (
+                    <p className="text-xs text-green-600">✓ Senhas coincidem</p>
+                  )}
+                </div>
                 </div>
               </div>
             </div>
