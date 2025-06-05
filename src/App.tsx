@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SummaryView from "./pages/SummaryView";
 import FlashcardsStudy from "./pages/FlashcardsStudy";
+import MindMapView from "./pages/MindMapView";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/summary/:id" element={<SummaryView />} />
           <Route path="/flashcards/:id" element={<FlashcardsStudy />} />
+          <Route path="/mindmap/:id" element={<MindMapView />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
