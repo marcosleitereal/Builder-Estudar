@@ -4,6 +4,7 @@ import { WelcomeBanner } from "@/components/study/WelcomeBanner";
 import { RecentSummaries } from "@/components/study/RecentSummaries";
 import { RecentFlashcards } from "@/components/study/RecentFlashcards";
 import { RecentMindMaps } from "@/components/study/RecentMindMaps";
+import { StudyStats } from "@/components/study/StudyStats";
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
         </div>
         <WelcomeBanner />
         <GeneratePanel />
+        <StudyStats />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <RecentSummaries />
           <RecentFlashcards />
