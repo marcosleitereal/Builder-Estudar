@@ -116,7 +116,7 @@ export function GeneratePanel() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <Card className="border-burnt-200/50 shadow-lg">
+      <Card className="border-burnt-200/50 shadow-lg hover:shadow-xl transition-shadow duration-200">
         <CardHeader className="bg-gradient-to-r from-burnt-50 to-terracotta-50 border-b border-burnt-100">
           <CardTitle className="text-2xl font-bold text-burnt-800 flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-lg flex items-center justify-center">
@@ -174,15 +174,16 @@ export function GeneratePanel() {
 
             <div
               className={cn(
-                "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
+                "border-2 border-dashed rounded-lg p-6 md:p-8 text-center transition-all duration-200",
                 dragOver
-                  ? "border-burnt-400 bg-burnt-50"
+                  ? "border-burnt-400 bg-burnt-50 scale-[1.02]"
                   : "border-muted-foreground/25 hover:border-burnt-300 hover:bg-burnt-50/50",
-                isGenerating && "opacity-50 pointer-events-none",
+                isGenerating && "opacity-50 pointer-events-none"
               )}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+            >
             >
               <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground mb-2">
