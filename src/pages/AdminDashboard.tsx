@@ -351,7 +351,7 @@ export default function AdminDashboard() {
             onValueChange={setActiveTab}
             className="space-y-6"
           >
-            <TabsList className="grid w-full grid-cols-6 bg-red-100">
+            <TabsList className="grid w-full grid-cols-7 bg-red-100">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
                 Visão Geral
@@ -367,6 +367,10 @@ export default function AdminDashboard() {
               <TabsTrigger value="ai" className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
                 IA
+              </TabsTrigger>
+              <TabsTrigger value="storage" className="flex items-center gap-2">
+                <Cloud className="h-4 w-4" />
+                Storage
               </TabsTrigger>
               <TabsTrigger value="visual" className="flex items-center gap-2">
                 <Palette className="h-4 w-4" />
