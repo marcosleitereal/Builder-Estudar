@@ -49,10 +49,11 @@ export function MainLayout({ children }: MainLayoutProps) {
           <div className="w-10"></div>
         </div>
 
-        <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-4 lg:p-6">
+          {children}
+        </main>
       </div>
 
-      {/* Navegação rápida para desenvolvimento */}
       <QuickNav />
     </div>
   );
