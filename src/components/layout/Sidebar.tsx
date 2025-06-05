@@ -221,7 +221,7 @@ export function Sidebar({ onClose }: SidebarProps) {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  section.isExpandable && "pr-2"
+                  section.isExpandable && "pr-2",
                 )}
                 onClick={(e) => {
                   if (section.isExpandable) {
@@ -231,7 +231,6 @@ export function Sidebar({ onClose }: SidebarProps) {
                     section.onClick();
                   }
                 }}
-              >
               >
                 <section.icon className="mr-3 h-4 w-4" />
                 <span
