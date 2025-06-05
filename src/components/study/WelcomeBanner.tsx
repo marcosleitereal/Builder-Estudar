@@ -11,22 +11,22 @@ export function WelcomeBanner() {
   const features = [
     {
       icon: Brain,
-      title: "AI-Powered Analysis",
+      title: "Análise com IA",
       description:
-        "Advanced AI analyzes your content to create optimal study materials",
+        "IA avançada analisa seu conteúdo para criar materiais de estudo otimizados",
     },
     {
       icon: BookOpen,
-      title: "Multiple Formats",
-      description: "Generate questions, summaries, flashcards, and mind maps",
+      title: "Múltiplos Formatos",
+      description: "Gere questões, resumos, flashcards e mapas mentais",
     },
     {
       icon: Target,
-      title: "Personalized Learning",
-      description: "Content tailored to your learning style and goals",
+      title: "Aprendizado Personalizado",
+      description:
+        "Conteúdo adaptado ao seu estilo de aprendizagem e objetivos",
     },
   ];
-
   return (
     <Card className="border-burnt-200/50 bg-gradient-to-r from-burnt-50 to-terracotta-50/80 shadow-sm mb-6">
       <CardContent className="p-6">
@@ -35,12 +35,12 @@ export function WelcomeBanner() {
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="h-5 w-5 text-burnt-600" />
               <h3 className="font-semibold text-burnt-800">
-                Welcome to StudyAI!
+                Bem-vindo ao StudyAI!
               </h3>
             </div>
             <p className="text-burnt-700/80 mb-4 text-sm">
-              Transform any learning material into personalized study content.
-              Get started by pasting text or uploading files below.
+              Transforme qualquer material de aprendizagem em conteúdo de estudo
+              personalizado. Comece colando texto ou enviando arquivos abaixo.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {features.map((feature, index) => (
