@@ -289,7 +289,13 @@ export function Sidebar({
     {
       title: t.settings,
       icon: Settings,
-      onClick: () => (window.location.href = "/settings"),
+      onClick: () => {
+        try {
+          window.location.href = "/settings";
+        } catch (error) {
+          console.error("Erro ao navegar para settings:", error);
+        }
+      },
     },
   ];
 
@@ -324,18 +330,26 @@ export function Sidebar({
       icon: LogOut,
       variant: "destructive",
       onClick: () => {
-        const confirm = window.confirm(
-          currentLanguage === "pt-BR"
-            ? "Tem certeza que deseja sair?"
-            : currentLanguage === "en-US"
-              ? "Are you sure you want to logout?"
-              : "¿Estás seguro de que quieres cerrar sesión?",
-        );
-        if (confirm) {
+        try {
+          const confirm = window.confirm(
+            currentLanguage === "pt-BR"
+              ? "Tem certeza que deseja sair?"
+              : currentLanguage === "en-US"
+                ? "Are you sure you want to logout?"
+                : "¿Estás seguro de que quieres cerrar sesión?",
+          );
+          if (confirm) {
+            localStorage.clear();
+            window.location.href = "/login";
+          }
+        } catch (error) {
+          console.error("Erro ao fazer logout:", error);
+          // Forçar logout mesmo com erro
           localStorage.clear();
-          window.location.href = "/login";
+          window.location.reload();
         }
       },
+    }
     },
   );
 
