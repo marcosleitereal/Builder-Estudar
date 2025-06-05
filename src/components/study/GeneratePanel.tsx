@@ -178,12 +178,11 @@ export function GeneratePanel() {
                 dragOver
                   ? "border-burnt-400 bg-burnt-50 scale-[1.02]"
                   : "border-muted-foreground/25 hover:border-burnt-300 hover:bg-burnt-50/50",
-                isGenerating && "opacity-50 pointer-events-none"
+                isGenerating && "opacity-50 pointer-events-none",
               )}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-            >
             >
               <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground mb-2">
