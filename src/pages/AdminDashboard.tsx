@@ -326,6 +326,20 @@ export default function AdminDashboard() {
     }
   };
 
+  const handlePromoteToPremiumAdmin = (userId: number) => {
+    const user = users.find((u) => u.id === userId);
+    if (!user) return;
+
+    const confirm = window.confirm(
+      `Tem certeza que deseja conceder Premium Gratuito para ${user.name}?\n\nEste é um plano especial que só pode ser oferecido por administradores.\nO usuário terá acesso completo aos recursos premium sem custos.`,
+    );
+
+    if (confirm) {
+      handleUserAction(userId, "premium-admin");
+      alert(`${user.name} recebeu o plano Premium Gratuito com sucesso!`);
+    }
+  };
+
   const handleCreateUser = async () => {
     // Validações
     if (!newUser.name || !newUser.email || !newUser.password) {
@@ -1106,7 +1120,7 @@ export default function AdminDashboard() {
                                 )}
                               </div>
                               <p className="text-sm text-muted-foreground">
-                                {provider.type.toUpperCase()} • Último teste:{" "}
+                                {provider.type.toUpperCase()} ��� Último teste:{" "}
                                 {provider.lastTested}
                               </p>
                             </div>
