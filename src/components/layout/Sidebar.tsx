@@ -305,12 +305,13 @@ export function Sidebar({
       title: t.adminPanel,
       icon: Shield,
       onClick: () => {
+        console.log("Clicou no botão admin");
         try {
+          console.log("Tentando navegar para /admin");
           window.location.href = "/admin";
         } catch (error) {
           console.error("Erro ao navegar para admin:", error);
-          // Fallback para navegação direta
-          window.open("/admin", "_self");
+          alert("Erro ao acessar painel admin: " + error.message);
         }
       },
       variant: "admin",
