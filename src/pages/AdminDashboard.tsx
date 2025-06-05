@@ -64,7 +64,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  plan: "free" | "premium";
+  plan: "free" | "premium" | "premium-admin";
   status: "active" | "inactive" | "banned";
   joinDate: string;
   lastActive: string;
