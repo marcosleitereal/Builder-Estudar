@@ -34,68 +34,137 @@ export function Sidebar({ onClose }: SidebarProps) {
   const [studyHistoryOpen, setStudyHistoryOpen] = useState(true);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<"pt-BR" | "en-US">(
+    "pt-BR",
+  );
+
+  const toggleLanguage = () => {
+    setCurrentLanguage((prev) => (prev === "pt-BR" ? "en-US" : "pt-BR"));
+  };
+
+  const getLanguageDisplay = () => {
+    return currentLanguage === "pt-BR" ? "Português (BR)" : "English (US)";
+  };
+
+  const getLanguageFlag = () => {
+    return currentLanguage === "pt-BR" ? "🇧🇷" : "🇺🇸";
+  };
+
+  // Textos dinâmicos baseados no idioma selecionado
+  const texts = {
+    "pt-BR": {
+      studyHistory: "Histórico de Estudos",
+      drafts: "Rascunhos",
+      simulatedExams: "Simulados",
+      flashcards: "Flashcards",
+      mindMaps: "Mapas Mentais",
+      subscription: "Assinatura",
+      notifications: "Notificações",
+      unread: "Não Lidas",
+      alerts: "Alertas",
+      information: "Informações",
+      confirmations: "Confirmações",
+      achievements: "Conquistas",
+      trophies: "Troféus",
+      medals: "Medalhas",
+      stars: "Estrelas",
+      objectives: "Objetivos",
+      settings: "Configurações",
+      language: "Idioma",
+      logout: "Sair",
+      progress: "Seu Progresso",
+      platform: "Plataforma de Aprendizado com IA",
+    },
+    "en-US": {
+      studyHistory: "Study History",
+      drafts: "Drafts",
+      simulatedExams: "Simulated Exams",
+      flashcards: "Flashcards",
+      mindMaps: "Mind Maps",
+      subscription: "Subscription",
+      notifications: "Notifications",
+      unread: "Unread",
+      alerts: "Alerts",
+      information: "Information",
+      confirmations: "Confirmations",
+      achievements: "Achievements",
+      trophies: "Trophies",
+      medals: "Medals",
+      stars: "Stars",
+      objectives: "Objectives",
+      settings: "Settings",
+      language: "Language",
+      logout: "Logout",
+      progress: "Your Progress",
+      platform: "AI-Powered Learning Platform",
+    },
+  };
+
+  const t = texts[currentLanguage];
 
   const navigationSections = [
     {
-      title: "Histórico de Estudos",
+      title: t.studyHistory,
       icon: BookOpen,
       isExpandable: true,
       isOpen: studyHistoryOpen,
       onToggle: () => setStudyHistoryOpen(!studyHistoryOpen),
       children: [
-        { title: "Rascunhos", icon: FileText, count: 3 },
-        { title: "Simulados", icon: Brain, count: 5 },
-        { title: "Flashcards", icon: Lightbulb, count: 12 },
-        { title: "Mapas Mentais", icon: BookOpen, count: 2 },
+        { title: t.drafts, icon: FileText, count: 3 },
+        { title: t.simulatedExams, icon: Brain, count: 5 },
+        { title: t.flashcards, icon: Lightbulb, count: 12 },
+        { title: t.mindMaps, icon: BookOpen, count: 2 },
       ],
     },
     {
-      title: "Assinatura",
+      title: t.subscription,
       icon: Crown,
       badge: "Premium",
     },
     {
-      title: "Notificações",
+      title: t.notifications,
       icon: Bell,
       count: 4,
       isExpandable: true,
       isOpen: notificationsOpen,
       onToggle: () => setNotificationsOpen(!notificationsOpen),
       children: [
-        { title: "Não Lidas", icon: MessageSquare, count: 2 },
-        { title: "Alertas", icon: AlertCircle, count: 1 },
-        { title: "Informações", icon: Info, count: 1 },
-        { title: "Confirmações", icon: CheckCircle, count: 0 },
+        { title: t.unread, icon: MessageSquare, count: 2 },
+        { title: t.alerts, icon: AlertCircle, count: 1 },
+        { title: t.information, icon: Info, count: 1 },
+        { title: t.confirmations, icon: CheckCircle, count: 0 },
       ],
     },
     {
-      title: "Conquistas",
+      title: t.achievements,
       icon: Award,
       count: 8,
       isExpandable: true,
       isOpen: achievementsOpen,
       onToggle: () => setAchievementsOpen(!achievementsOpen),
       children: [
-        { title: "Troféus", icon: Trophy, count: 3 },
-        { title: "Medalhas", icon: Medal, count: 4 },
-        { title: "Estrelas", icon: Star, count: 1 },
-        { title: "Objetivos", icon: Target, count: 0 },
+        { title: t.trophies, icon: Trophy, count: 3 },
+        { title: t.medals, icon: Medal, count: 4 },
+        { title: t.stars, icon: Star, count: 1 },
+        { title: t.objectives, icon: Target, count: 0 },
       ],
     },
   ];
 
   const bottomSections = [
     {
-      title: "Configurações",
+      title: t.settings,
       icon: Settings,
     },
     {
-      title: "Idioma",
+      title: t.language,
       icon: Languages,
-      subtitle: "Português (BR)",
+      subtitle: getLanguageDisplay(),
+      flag: getLanguageFlag(),
+      onClick: toggleLanguage,
     },
     {
-      title: "Sair",
+      title: t.logout,
       icon: LogOut,
       variant: "destructive" as const,
     },
@@ -123,9 +192,7 @@ export function Sidebar({ onClose }: SidebarProps) {
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-sm text-sidebar-foreground/70 mt-1">
-          Plataforma de Aprendizado com IA
-        </p>
+        <p className="text-sm text-sidebar-foreground/70 mt-1">{t.platform}</p>
       </div>
 
       {/* Navigation */}
@@ -206,10 +273,14 @@ export function Sidebar({ onClose }: SidebarProps) {
               section.variant !== "destructive" &&
                 "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             )}
+            onClick={section.onClick}
           >
             <section.icon className="mr-3 h-4 w-4" />
             <div className="flex-1 text-left">
-              <div>{section.title}</div>
+              <div className="flex items-center gap-2">
+                {section.title}
+                {section.flag && <span>{section.flag}</span>}
+              </div>
               {section.subtitle && (
                 <div className="text-xs text-sidebar-foreground/60">
                   {section.subtitle}
