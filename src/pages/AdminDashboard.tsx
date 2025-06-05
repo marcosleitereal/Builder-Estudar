@@ -1313,135 +1313,331 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
-                    {/* Configurações específicas por tipo */}
-                    {newProvider.type !== "local" && (
-                      <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
-                        <h4 className="font-medium">
-                          Configurações de Conexão
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>Access Key / ID</Label>
-                            <Input
-                              placeholder="Access Key"
-                              value={newProvider.config?.accessKey || ""}
-                              onChange={(e) =>
-                                setNewProvider((prev) => ({
-                                  ...prev,
-                                  config: {
-                                    ...prev.config,
-                                    accessKey: e.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label>Secret Key</Label>
-                            <Input
-                              type="password"
-                              placeholder="Secret Key"
-                              value={newProvider.config?.secretKey || ""}
-                              onChange={(e) =>
-                                setNewProvider((prev) => ({
-                                  ...prev,
-                                  config: {
-                                    ...prev.config,
-                                    secretKey: e.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label>Bucket / Container</Label>
-                            <Input
-                              placeholder="Nome do bucket"
-                              value={newProvider.config?.bucket || ""}
-                              onChange={(e) =>
-                                setNewProvider((prev) => ({
-                                  ...prev,
-                                  config: {
-                                    ...prev.config,
-                                    bucket: e.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label>Região</Label>
-                            <Input
-                              placeholder="us-east-1"
-                              value={newProvider.config?.region || ""}
-                              onChange={(e) =>
-                                setNewProvider((prev) => ({
-                                  ...prev,
-                                  config: {
-                                    ...prev.config,
-                                    region: e.target.value,
-                                  },
-                                }))
-                              }
-                            />
-                          </div>
-
-                          {newProvider.type === "minio" && (
-                            <div className="space-y-2 md:col-span-2">
-                              <Label>Endpoint</Label>
-                              <Input
-                                placeholder="https://minio.exemplo.com"
-                                value={newProvider.config?.endpoint || ""}
-                                onChange={(e) =>
-                                  setNewProvider((prev) => ({
-                                    ...prev,
-                                    config: {
-                                      ...prev.config,
-                                      endpoint: e.target.value,
-                                    },
-                                  }))
-                                }
-                              />
-                            </div>
-                          )}
-                        </div>
+            {/* Configurações Visuais */}
+            <TabsContent value="visual">
+              <div className="space-y-6">
+                {/* Paleta de Cores Primárias */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Palette className="h-5 w-5 text-blue-600" />
+                      Cor Primária do Sistema
+                    </CardTitle>
+                    <CardDescription>
+                      Escolha a cor principal que será usada em botões, links e elementos de destaque
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Paleta de cores pré-definidas */}
+                    <div>
+                      <Label className="text-sm font-medium mb-3 block">Cores Populares</Label>
+                      <div className="grid grid-cols-8 gap-3">
+                        {[
+                          { name: "Azul", color: "#3B82F6" },
+                          { name: "Verde", color: "#10B981" },
+                          { name: "Roxo", color: "#8B5CF6" },
+                          { name: "Rosa", color: "#EC4899" },
+                          { name: "Vermelho", color: "#EF4444" },
+                          { name: "Laranja", color: "#F59E0B" },
+                          { name: "Índigo", color: "#6366F1" },
+                          { name: "Teal", color: "#14B8A6" },
+                          { name: "Ciano", color: "#06B6D4" },
+                          { name: "Amarelo", color: "#EAB308" },
+                          { name: "Esmeralda", color: "#059669" },
+                          { name: "Violeta", color: "#7C3AED" },
+                          { name: "Padrão", color: "#D4831A" },
+                          { name: "Cinza", color: "#6B7280" },
+                          { name: "Slate", color: "#475569" },
+                          { name: "Stone", color: "#78716C" },
+                        ].map((colorOption) => (
+                          <button
+                            key={colorOption.name}
+                            className={cn(
+                              "w-12 h-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 relative border-2",
+                              systemSettings.primaryColor === colorOption.color
+                                ? "border-gray-800 ring-2 ring-gray-400"
+                                : "border-gray-200 hover:border-gray-300"
+                            )}
+                            style={{ backgroundColor: colorOption.color }}
+                            onClick={() => handleSystemUpdate("primaryColor", colorOption.color)}
+                            title={`${colorOption.name} - ${colorOption.color}`}
+                          >
+                            {systemSettings.primaryColor === colorOption.color && (
+                              <CheckCircle className="h-4 w-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                            )}
+                          </button>
+                        ))}
                       </div>
-                    )}
+                    </div>
 
-                    {newProvider.type === "local" && (
-                      <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
-                        <h4 className="font-medium">Configurações Local</h4>
-                        <div className="space-y-2">
-                          <Label>Caminho no Servidor</Label>
+                    {/* Color picker personalizado */}
+                    <div>
+                      <Label className="text-sm font-medium mb-3 block">Cor Personalizada</Label>
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
                           <Input
-                            placeholder="/var/www/uploads"
-                            value={newProvider.config?.path || ""}
-                            onChange={(e) =>
-                              setNewProvider((prev) => ({
-                                ...prev,
-                                config: {
-                                  ...prev.config,
-                                  path: e.target.value,
-                                },
-                              }))
-                            }
+                            type="color"
+                            value={systemSettings.primaryColor}
+                            onChange={(e) => handleSystemUpdate("primaryColor", e.target.value)}
+                            className="w-16 h-12 p-1 rounded-lg cursor-pointer"
                           />
                         </div>
+                        <div className="flex-1">
+                          <Input
+                            value={systemSettings.primaryColor}
+                            onChange={(e) => handleSystemUpdate("primaryColor", e.target.value)}
+                            placeholder="#000000"
+                            className="font-mono"
+                          />
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleSystemUpdate("primaryColor", "#D4831A")}
+                          className="text-sm"
+                        >
+                          Resetar
+                        </Button>
                       </div>
-                    )}
-
-                    <Button
-                      onClick={handleAddStorageProvider}
-                      className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Adicionar Provedor de Storage
-                    </Button>
+                    </div>
                   </CardContent>
                 </Card>
+
+                {/* Paleta de Cores Secundárias */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Palette className="h-5 w-5 text-purple-600" />
+                      Cor Secundária do Sistema
+                    </CardTitle>
+                    <CardDescription>
+                      Escolha a cor secundária usada em elementos de apoio e acentos
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Paleta de cores secundárias */}
+                    <div>
+                      <Label className="text-sm font-medium mb-3 block">Cores Populares</Label>
+                      <div className="grid grid-cols-8 gap-3">
+                        {[
+                          { name: "Azul Claro", color: "#60A5FA" },
+                          { name: "Verde Claro", color: "#34D399" },
+                          { name: "Roxo Claro", color: "#A78BFA" },
+                          { name: "Rosa Claro", color: "#F472B6" },
+                          { name: "Vermelho Claro", color: "#F87171" },
+                          { name: "Laranja Claro", color: "#FBBF24" },
+                          { name: "Índigo Claro", color: "#818CF8" },
+                          { name: "Teal Claro", color: "#2DD4BF" },
+                          { name: "Ciano Claro", color: "#22D3EE" },
+                          { name: "Amarelo Claro", color: "#FDE047" },
+                          { name: "Esmeralda Claro", color: "#10B981" },
+                          { name: "Violeta Claro", color: "#8B5CF6" },
+                          { name: "Padrão", color: "#D97556" },
+                          { name: "Cinza Claro", color: "#9CA3AF" },
+                          { name: "Slate Claro", color: "#64748B" },
+                          { name: "Stone Claro", color: "#A8A29E" },
+                        ].map((colorOption) => (
+                          <button
+                            key={colorOption.name}
+                            className={cn(
+                              "w-12 h-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 relative border-2",
+                              systemSettings.secondaryColor === colorOption.color
+                                ? "border-gray-800 ring-2 ring-gray-400"
+                                : "border-gray-200 hover:border-gray-300"
+                            )}
+                            style={{ backgroundColor: colorOption.color }}
+                            onClick={() => handleSystemUpdate("secondaryColor", colorOption.color)}
+                            title={`${colorOption.name} - ${colorOption.color}`}
+                          >
+                            {systemSettings.secondaryColor === colorOption.color && (
+                              <CheckCircle className="h-4 w-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Color picker personalizado */}
+                    <div>
+                      <Label className="text-sm font-medium mb-3 block">Cor Personalizada</Label>
+                      <div className="flex items-center gap-4">
+                        <div className="relative">
+                          <Input
+                            type="color"
+                            value={systemSettings.secondaryColor}
+                            onChange={(e) => handleSystemUpdate("secondaryColor", e.target.value)}
+                            className="w-16 h-12 p-1 rounded-lg cursor-pointer"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <Input
+                            value={systemSettings.secondaryColor}
+                            onChange={(e) => handleSystemUpdate("secondaryColor", e.target.value)}
+                            placeholder="#000000"
+                            className="font-mono"
+                          />
+                        </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleSystemUpdate("secondaryColor", "#D97556")}
+                          className="text-sm"
+                        >
+                          Resetar
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Preview Avançado */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Eye className="h-5 w-5 text-green-600" />
+                      Preview das Cores Selecionadas
+                    </CardTitle>
+                    <CardDescription>
+                      Veja como as cores escolhidas aparecerão na interface do sistema
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* Preview Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Cor Primária */}
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">Elementos Primários</Label>
+                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50">
+                          <Button
+                            className="w-full text-white font-medium"
+                            style={{ backgroundColor: systemSettings.primaryColor }}
+                          >
+                            Botão Principal
+                          </Button>
+                          <div
+                            className="h-3 rounded-full w-3/4"
+                            style={{ backgroundColor: systemSettings.primaryColor }}
+                          ></div>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-4 h-4 rounded"
+                              style={{ backgroundColor: systemSettings.primaryColor }}
+                            ></div>
+                            <span style={{ color: systemSettings.primaryColor }} className="font-medium">
+                              Link/Texto em Destaque
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Cor Secundária */}
+                      <div className="space-y-3">
+                        <Label className="text-sm font-medium">Elementos Secundários</Label>
+                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50">
+                          <Button
+                            variant="outline"
+                            className="w-full border-2 font-medium"
+                            style={{
+                              borderColor: systemSettings.secondaryColor,
+                              color: systemSettings.secondaryColor
+                            }}
+                          >
+                            Botão Secundário
+                          </Button>
+                          <div
+                            className="h-2 rounded-full w-3/4 opacity-60"
+                            style={{ backgroundColor: systemSettings.secondaryColor }}
+                          ></div>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-4 h-4 rounded opacity-60"
+                              style={{ backgroundColor: systemSettings.secondaryColor }}
+                            ></div>
+                            <span style={{ color: systemSettings.secondaryColor }} className="opacity-80">
+                              Elementos de Apoio
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Combinação das Cores */}
+                    <div className="p-6 rounded-lg border-2" style={{
+                      background: `linear-gradient(135deg, ${systemSettings.primaryColor}15, ${systemSettings.secondaryColor}15)`,
+                      borderColor: systemSettings.primaryColor + '40'
+                    }}>
+                      <h4 className="font-semibold text-lg mb-2" style={{ color: systemSettings.primaryColor }}>
+                        Preview da Combinação
+                      </h4>
+                      <p className="text-gray-600 mb-4">
+                        Esta é uma demonstração de como as cores escolhidas funcionam juntas na interface.
+                      </p>
+                      <div className="flex gap-3">
+                        <Button
+                          size="sm"
+                          className="text-white"
+                          style={{ backgroundColor: systemSettings.primaryColor }}
+                        >
+                          Ação Principal
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          style={{
+                            borderColor: systemSettings.secondaryColor,
+                            color: systemSettings.secondaryColor
+                          }}
+                        >
+                          Ação Secundária
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Códigos das Cores */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-8 h-8 rounded-md border"
+                          style={{ backgroundColor: systemSettings.primaryColor }}
+                        ></div>
+                        <div>
+                          <p className="text-sm font-medium">Cor Primária</p>
+                          <p className="text-xs font-mono text-gray-600">{systemSettings.primaryColor}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-8 h-8 rounded-md border"
+                          style={{ backgroundColor: systemSettings.secondaryColor }}
+                        ></div>
+                        <div>
+                          <p className="text-sm font-medium">Cor Secundária</p>
+                          <p className="text-xs font-mono text-gray-600">{systemSettings.secondaryColor}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Botões de Ação */}
+                <div className="flex gap-4 justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      handleSystemUpdate("primaryColor", "#D4831A");
+                      handleSystemUpdate("secondaryColor", "#D97556");
+                    }}
+                  >
+                    Restaurar Padrão
+                  </Button>
+                  <Button
+                    className="text-white px-6"
+                    style={{
+                      background: `linear-gradient(135deg, ${systemSettings.primaryColor}, ${systemSettings.secondaryColor})`
+                    }}
+                  >
+                    <Palette className="h-4 w-4 mr-2" />
+                    Aplicar Configurações
+                  </Button>
+                </div>
               </div>
             </TabsContent>
 
