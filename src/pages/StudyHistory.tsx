@@ -170,6 +170,7 @@ const dateOptions = [
   { value: "semana", label: "Esta Semana" },
   { value: "mes", label: "Este Mês" },
   { value: "trimestre", label: "Último Trimestre" },
+  { value: "semestre", label: "Último Semestre" },
 ];
 
 export default function StudyHistory() {
@@ -232,6 +233,9 @@ export default function StudyHistory() {
             break;
           case "trimestre":
             matchesDate = daysDiff <= 90;
+            break;
+          case "semestre":
+            matchesDate = daysDiff <= 180;
             break;
         }
       }

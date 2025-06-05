@@ -20,17 +20,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export default function Login() {
-  const [loginType, setLoginType] = useState<"email" | "cpf">("email");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
-    cpf: "",
+    emailOrCpf: "",
     password: "",
   });
 
@@ -55,21 +52,46 @@ export default function Login() {
   };
 
   const handleForgotPassword = () => {
-    console.log("Esqueci minha senha");
+    window.location.href = "/forgot-password";
   };
 
   const handleCreateAccount = () => {
     console.log("Criar nova conta");
   };
 
-  const formatCPF = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  // Função para detectar se é CPF ou email
+  const detectInputType = (value: string) => {
+    const numbersOnly = value.replace(/\D/g, "");
+    if (numbersOnly.length > 0 && numbersOnly.length <= 11) {
+      return "cpf";
+    }
+    return "email";
   };
 
-  const handleCPFChange = (value: string) => {
-    const formattedCPF = formatCPF(value);
-    handleInputChange("cpf", formattedCPF);
+  const formatInput = (value: string) => {
+    const inputType = detectInputType(value);
+
+    if (inputType === "cpf") {
+      const numbers = value.replace(/\D/g, "");
+      return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+
+    return value;
+  };
+
+  const handleEmailOrCpfChange = (value: string) => {
+    const formattedValue = formatInput(value);
+    handleInputChange("emailOrCpf", formattedValue);
+  };
+
+  const getInputPlaceholder = () => {
+    const inputType = detectInputType(formData.emailOrCpf);
+    return inputType === "cpf" ? "000.000.000-00" : "seu@email.com";
+  };
+
+  const getInputIcon = () => {
+    const inputType = detectInputType(formData.emailOrCpf);
+    return inputType === "cpf" ? UserPlus : Mail;
   };
 
   return (
@@ -97,123 +119,94 @@ export default function Login() {
               Entrar na sua conta
             </CardTitle>
             <CardDescription>
-              Acesse sua conta para continuar estudando
+              Digite seu e-mail ou CPF para continuar
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <Tabs
-              value={loginType}
-              onValueChange={(value) => setLoginType(value as "email" | "cpf")}
-            >
-              <TabsList className="grid w-full grid-cols-2 bg-burnt-100">
-                <TabsTrigger value="email" className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  E-mail
-                </TabsTrigger>
-                <TabsTrigger value="cpf" className="flex items-center gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  CPF
-                </TabsTrigger>
-              </TabsList>
-
-              <form onSubmit={handleLogin} className="space-y-4 mt-6">
-                <TabsContent value="email" className="space-y-4 mt-0">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">E-mail</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="seu@email.com"
-                        value={formData.email}
-                        onChange={(e) =>
-                          handleInputChange("email", e.target.value)
-                        }
-                        className="pl-10 border-burnt-200 focus:border-burnt-500"
-                        required
-                      />
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="cpf" className="space-y-4 mt-0">
-                  <div className="space-y-2">
-                    <Label htmlFor="cpf">CPF</Label>
-                    <div className="relative">
-                      <UserPlus className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="cpf"
-                        type="text"
-                        placeholder="000.000.000-00"
-                        value={formData.cpf}
-                        onChange={(e) => handleCPFChange(e.target.value)}
-                        className="pl-10 border-burnt-200 focus:border-burnt-500"
-                        maxLength={14}
-                        required
-                      />
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Senha</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Sua senha"
-                      value={formData.password}
-                      onChange={(e) =>
-                        handleInputChange("password", e.target.value)
-                      }
-                      className="pl-10 pr-10 border-burnt-200 focus:border-burnt-500"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="emailOrCpf">E-mail ou CPF</Label>
+                <div className="relative">
+                  {(() => {
+                    const IconComponent = getInputIcon();
+                    return (
+                      <IconComponent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    );
+                  })()}
+                  <Input
+                    id="emailOrCpf"
+                    type="text"
+                    placeholder={getInputPlaceholder()}
+                    value={formData.emailOrCpf}
+                    onChange={(e) => handleEmailOrCpfChange(e.target.value)}
+                    className="pl-10 border-burnt-200 focus:border-burnt-500"
+                    required
+                  />
+                  <div className="absolute right-3 top-3 text-xs text-muted-foreground">
+                    {detectInputType(formData.emailOrCpf) === "cpf"
+                      ? "CPF"
+                      : "Email"}
                   </div>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <Label htmlFor="password">Senha</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Sua senha"
+                    value={formData.password}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
+                    className="pl-10 pr-10 border-burnt-200 focus:border-burnt-500"
+                    required
+                  />
                   <button
                     type="button"
-                    onClick={handleForgotPassword}
-                    className="text-sm text-burnt-600 hover:text-burnt-700 hover:underline"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                   >
-                    Esqueci minha senha
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
+              </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-11 bg-gradient-to-r from-burnt-500 to-terracotta-600 hover:from-burnt-600 hover:to-terracotta-700 text-white font-semibold"
-                  disabled={isLoading}
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-sm text-burnt-600 hover:text-burnt-700 hover:underline"
                 >
-                  {isLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                      Entrando...
-                    </>
-                  ) : (
-                    <>
-                      Entrar
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </>
-                  )}
-                </Button>
-              </form>
-            </Tabs>
+                  Esqueci minha senha
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full h-11 bg-gradient-to-r from-burnt-500 to-terracotta-600 hover:from-burnt-600 hover:to-terracotta-700 text-white font-semibold"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                    Entrando...
+                  </>
+                ) : (
+                  <>
+                    Entrar
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </>
+                )}
+              </Button>
+            </form>
 
             <div className="space-y-4">
               <div className="relative">

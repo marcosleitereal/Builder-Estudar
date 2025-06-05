@@ -42,12 +42,16 @@ export function Sidebar({
   const [studyHistoryOpen, setStudyHistoryOpen] = useState(true);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<"pt-BR" | "en-US">(
+  const [currentLanguage, setCurrentLanguage] = useState<'pt-BR' | 'en-US' | 'es-ES'>('pt-BR');
     "pt-BR",
   );
 
   const toggleLanguage = () => {
-    setCurrentLanguage((prev) => (prev === "pt-BR" ? "en-US" : "pt-BR"));
+    setCurrentLanguage(prev => {
+      if (prev === 'pt-BR') return 'en-US';
+      if (prev === 'en-US') return 'es-ES';
+      return 'pt-BR';
+    });
   };
 
   const getLanguageDisplay = () => {
@@ -72,51 +76,75 @@ export function Sidebar({
 
   // Textos dinâmicos baseados no idioma selecionado
   const texts = {
-    "pt-BR": {
-      studyHistory: "Histórico de Estudos",
-      drafts: "Rascunhos",
-      simulatedExams: "Simulados",
-      flashcards: "Flashcards",
-      mindMaps: "Mapas Mentais",
-      subscription: "Assinatura",
-      notifications: "Notificações",
-      unread: "Não Lidas",
-      alerts: "Alertas",
-      information: "Informações",
-      confirmations: "Confirmações",
-      achievements: "Conquistas",
-      trophies: "Troféus",
-      medals: "Medalhas",
-      stars: "Estrelas",
-      objectives: "Objetivos",
-      settings: "Configurações",
-      language: "Idioma",
-      logout: "Sair",
-      progress: "Seu Progresso",
-      platform: "Plataforma de Aprendizado com IA",
+    'pt-BR': {
+      studyHistory: 'Histórico de Estudos',
+      drafts: 'Rascunhos',
+      simulatedExams: 'Simulados',
+      flashcards: 'Flashcards',
+      mindMaps: 'Mapas Mentais',
+      subscription: 'Assinatura',
+      notifications: 'Notificações',
+      unread: 'Não Lidas',
+      alerts: 'Alertas',
+      information: 'Informações',
+      confirmations: 'Confirmações',
+      achievements: 'Conquistas',
+      trophies: 'Troféus',
+      medals: 'Medalhas',
+      stars: 'Estrelas',
+      objectives: 'Objetivos',
+      settings: 'Configurações',
+      language: 'Idioma',
+      logout: 'Sair',
+      progress: 'Seu Progresso',
+      platform: 'Plataforma de Aprendizado com IA'
     },
-    "en-US": {
-      studyHistory: "Study History",
-      drafts: "Drafts",
-      simulatedExams: "Simulated Exams",
-      flashcards: "Flashcards",
-      mindMaps: "Mind Maps",
-      subscription: "Subscription",
-      notifications: "Notifications",
-      unread: "Unread",
-      alerts: "Alerts",
-      information: "Information",
-      confirmations: "Confirmations",
-      achievements: "Achievements",
-      trophies: "Trophies",
-      medals: "Medals",
-      stars: "Stars",
-      objectives: "Objectives",
-      settings: "Settings",
-      language: "Language",
-      logout: "Logout",
-      progress: "Your Progress",
-      platform: "AI-Powered Learning Platform",
+    'en-US': {
+      studyHistory: 'Study History',
+      drafts: 'Drafts',
+      simulatedExams: 'Simulated Exams',
+      flashcards: 'Flashcards',
+      mindMaps: 'Mind Maps',
+      subscription: 'Subscription',
+      notifications: 'Notifications',
+      unread: 'Unread',
+      alerts: 'Alerts',
+      information: 'Information',
+      confirmations: 'Confirmations',
+      achievements: 'Achievements',
+      trophies: 'Trophies',
+      medals: 'Medals',
+      stars: 'Stars',
+      objectives: 'Objectives',
+      settings: 'Settings',
+      language: 'Language',
+      logout: 'Logout',
+      progress: 'Your Progress',
+      platform: 'AI-Powered Learning Platform'
+    },
+    'es-ES': {
+      studyHistory: 'Historial de Estudios',
+      drafts: 'Borradores',
+      simulatedExams: 'Exámenes Simulados',
+      flashcards: 'Tarjetas de Estudio',
+      mindMaps: 'Mapas Mentales',
+      subscription: 'Suscripción',
+      notifications: 'Notificaciones',
+      unread: 'No Leídas',
+      alerts: 'Alertas',
+      information: 'Información',
+      confirmations: 'Confirmaciones',
+      achievements: 'Logros',
+      trophies: 'Trofeos',
+      medals: 'Medallas',
+      stars: 'Estrellas',
+      objectives: 'Objetivos',
+      settings: 'Configuraciones',
+      language: 'Idioma',
+      logout: 'Cerrar Sesión',
+      progress: 'Tu Progreso',
+      platform: 'Plataforma de Aprendizaje con IA'
+    }
     },
   };
 
@@ -191,6 +219,19 @@ export function Sidebar({
       title: t.logout,
       icon: LogOut,
       variant: "destructive" as const,
+      onClick: () => {
+        const confirm = window.confirm(
+          currentLanguage === 'pt-BR'
+            ? 'Tem certeza que deseja sair?'
+            : currentLanguage === 'en-US'
+            ? 'Are you sure you want to logout?'
+            : '¿Estás seguro de que quieres cerrar sesión?'
+        );
+        if (confirm) {
+          localStorage.clear();
+          window.location.href = '/login';
+        }
+      },
     },
   ];
 
@@ -369,17 +410,19 @@ export function Sidebar({
                   {section.isLanguageSelector && (
                     <div className="flex items-center gap-2 px-2 py-1 bg-burnt-100 rounded-md">
                       {getLanguageFlag()}
-                      <span className="text-xs font-medium text-burnt-700">
-                        {currentLanguage === "pt-BR" ? "PT" : "EN"}
-                      </span>
+                    <span className="text-xs font-medium text-burnt-700">
+                      {currentLanguage === 'pt-BR' ? 'PT' : currentLanguage === 'en-US' ? 'EN' : 'ES'}
+                    </span>
                     </div>
                   )}
                 </div>
                 {section.isLanguageSelector && (
                   <div className="text-xs text-sidebar-foreground/60 mt-1">
-                    {currentLanguage === "pt-BR"
-                      ? "Clique para alterar para English"
-                      : "Click to change to Português"}
+                    {currentLanguage === 'pt-BR'
+                      ? 'Clique para alterar idioma'
+                      : currentLanguage === 'en-US'
+                      ? 'Click to change language'
+                      : 'Haz clic para cambiar idioma'}
                   </div>
                 )}
               </div>
