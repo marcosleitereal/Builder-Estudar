@@ -556,7 +556,7 @@ export function Sidebar({
             className={cn(
               "w-full justify-start",
               section.variant === "destructive" &&
-                "text-destructive hover:bg-destructive/10",
+                "text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 border border-red-200",
               section.variant === "admin" &&
                 "text-yellow-700 hover:bg-yellow-100 border border-yellow-200",
               section.variant !== "destructive" &&
