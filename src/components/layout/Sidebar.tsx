@@ -134,6 +134,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       title: t.subscription,
       icon: Crown,
       badge: "Premium",
+      onClick: () => (window.location.href = "/subscription"),
     },
     {
       title: t.notifications,
@@ -142,6 +143,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       isExpandable: true,
       isOpen: notificationsOpen,
       onToggle: () => setNotificationsOpen(!notificationsOpen),
+      onClick: () => (window.location.href = "/notifications"),
       children: [
         { title: t.unread, icon: MessageSquare, count: 2 },
         { title: t.alerts, icon: AlertCircle, count: 1 },
@@ -170,6 +172,7 @@ export function Sidebar({ onClose }: SidebarProps) {
     {
       title: t.settings,
       icon: Settings,
+      onClick: () => (window.location.href = "/settings"),
     },
     {
       title: t.language,
