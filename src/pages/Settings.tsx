@@ -147,6 +147,11 @@ export default function Settings() {
         updateSetting("avatar", base64);
         setHasChanges(true);
 
+        // Salvar imediatamente e notificar
+        const newSettings = { ...settings, avatar: base64 };
+        localStorage.setItem("studyai-settings", JSON.stringify(newSettings));
+        window.dispatchEvent(new CustomEvent("userDataUpdated"));
+
         toast({
           title: "Foto atualizada!",
           description: "Sua foto de perfil foi alterada com sucesso.",
@@ -174,6 +179,11 @@ export default function Settings() {
       updateSetting("avatar", null);
       setHasChanges(true);
 
+      // Salvar imediatamente e notificar
+      const newSettings = { ...settings, avatar: null };
+      localStorage.setItem("studyai-settings", JSON.stringify(newSettings));
+      window.dispatchEvent(new CustomEvent("userDataUpdated"));
+
       toast({
         title: "Foto removida",
         description: "Sua foto de perfil foi removida.",
@@ -190,6 +200,9 @@ export default function Settings() {
 
       // Salvar no localStorage
       localStorage.setItem("studyai-settings", JSON.stringify(settings));
+
+      // Notificar outros componentes sobre a atualização
+      window.dispatchEvent(new CustomEvent("userDataUpdated"));
 
       setHasChanges(false);
 
