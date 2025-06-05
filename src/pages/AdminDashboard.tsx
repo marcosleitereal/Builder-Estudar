@@ -1519,208 +1519,223 @@ export default function AdminDashboard() {
       </div>
 
       {/* Modal de Novo Usuário */}
-      <Dialog open={showNewUserModal} onOpenChange={setShowNewUserModal}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <UserPlus className="h-5 w-5 text-blue-600" />
-              Criar Novo Usuário
-            </DialogTitle>
-            <DialogDescription>
-              Adicione um novo usuário ao sistema com as permissões adequadas.
-            </DialogDescription>
-          </DialogHeader>
+      {showNewUserModal && (
+        <Dialog open={showNewUserModal} onOpenChange={setShowNewUserModal}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <UserPlus className="h-5 w-5 text-blue-600" />
+                Criar Novo Usuário
+              </DialogTitle>
+              <DialogDescription>
+                Adicione um novo usuário ao sistema com as permissões adequadas.
+              </DialogDescription>
+            </DialogHeader>
 
-          <div className="space-y-6 py-4">
-            {/* Informações Básicas */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-lg">Informações Básicas</h3>
+            <div className="space-y-6 py-4">
+              {/* Informações Básicas */}
+              <div className="space-y-4">
+                <h3 className="font-medium text-lg">Informações Básicas</h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="user-name">Nome Completo *</Label>
-                  <Input
-                    id="user-name"
-                    placeholder="Ex: João Silva"
-                    value={newUser.name}
-                    onChange={(e) =>
-                      setNewUser((prev) => ({ ...prev, name: e.target.value }))
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-email">E-mail *</Label>
-                  <Input
-                    id="user-email"
-                    type="email"
-                    placeholder="joao@email.com"
-                    value={newUser.email}
-                    onChange={(e) =>
-                      setNewUser((prev) => ({ ...prev, email: e.target.value }))
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="user-password">Senha *</Label>
-                  <Input
-                    id="user-password"
-                    type="password"
-                    placeholder="Mínimo 6 caracteres"
-                    value={newUser.password}
-                    onChange={(e) =>
-                      setNewUser((prev) => ({
-                        ...prev,
-                        password: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-confirm-password">Confirmar Senha *</Label>
-                  <Input
-                    id="user-confirm-password"
-                    type="password"
-                    placeholder="Digite a senha novamente"
-                    value={newUser.confirmPassword}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className={cn(
-                      newUser.confirmPassword && newUser.password !== newUser.confirmPassword
-                        ? "border-red-300 focus:border-red-400"
-                        : newUser.confirmPassword && newUser.password === newUser.confirmPassword
-                        ? "border-green-300 focus:border-green-400"
-                        : ""
-                    )}
-                  />
-                  {newUser.confirmPassword && newUser.password !== newUser.confirmPassword && (
-                    <p className="text-xs text-red-600">As senhas não coincidem</p>
-                  )}
-                  {newUser.confirmPassword && newUser.password === newUser.confirmPassword && (
-                    <p className="text-xs text-green-600">✓ Senhas coincidem</p>
-                  )}
-                </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Permissões e Plano */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-lg">Permissões e Plano</h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="user-role">Tipo de Usuário</Label>
-                  <Select
-                    value={newUser.role}
-                    onValueChange={(value: "user" | "admin") =>
-                      setNewUser((prev) => ({ ...prev, role: value }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">👤 Usuário Padrão</SelectItem>
-                      <SelectItem value="admin">🛡️ Administrador</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground">
-                    Administradores têm acesso ao painel de controle
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="user-plan">Plano de Assinatura</Label>
-                  <Select
-                    value={newUser.plan}
-                    onValueChange={(value: "free" | "premium") =>
-                      setNewUser((prev) => ({ ...prev, plan: value }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="free">🆓 Gratuito</SelectItem>
-                      <SelectItem value="premium">👑 Premium</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-xs text-muted-foreground">
-                    {newUser.plan === "premium"
-                      ? "Acesso completo aos recursos"
-                      : "Recursos limitados"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Preview do usuário */}
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <h4 className="font-medium mb-2">Preview do Usuário:</h4>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="user-name">Nome Completo *</Label>
+                    <Input
+                      id="user-name"
+                      placeholder="Ex: João Silva"
+                      value={newUser.name}
+                      onChange={(e) =>
+                        setNewUser((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
+                    />
                   </div>
-                  <div>
-                    <p className="font-medium">
-                      {newUser.name || "Nome do usuário"}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">
-                        {newUser.email || "email@exemplo.com"}
-                      </span>
-                      <Badge
-                        className={cn(
-                          "text-xs",
-                          newUser.plan === "premium"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-gray-100 text-gray-700",
-                        )}
-                      >
-                        {newUser.plan === "premium" ? "Premium" : "Gratuito"}
-                      </Badge>
-                      {newUser.role === "admin" && (
-                        <Badge className="bg-red-100 text-red-700">Admin</Badge>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="user-email">E-mail *</Label>
+                    <Input
+                      id="user-email"
+                      type="email"
+                      placeholder="joao@email.com"
+                      value={newUser.email}
+                      onChange={(e) =>
+                        setNewUser((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="user-password">Senha *</Label>
+                    <Input
+                      id="user-password"
+                      type="password"
+                      placeholder="Mínimo 6 caracteres"
+                      value={newUser.password}
+                      onChange={(e) =>
+                        setNewUser((prev) => ({
+                          ...prev,
+                          password: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="user-confirm-password">
+                      Confirmar Senha *
+                    </Label>
+                    <Input
+                      id="user-confirm-password"
+                      type="password"
+                      placeholder="Digite a senha novamente"
+                      value={newUser.confirmPassword}
+                      onChange={(e) =>
+                        setNewUser((prev) => ({
+                          ...prev,
+                          confirmPassword: e.target.value,
+                        }))
+                      }
+                    />
+                    {newUser.confirmPassword &&
+                      newUser.password !== newUser.confirmPassword && (
+                        <p className="text-xs text-red-600">
+                          As senhas não coincidem
+                        </p>
                       )}
+                    {newUser.confirmPassword &&
+                      newUser.password === newUser.confirmPassword &&
+                      newUser.password && (
+                        <p className="text-xs text-green-600">
+                          ✓ Senhas coincidem
+                        </p>
+                      )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Permissões e Plano */}
+              <div className="space-y-4">
+                <h3 className="font-medium text-lg">Permissões e Plano</h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="user-role">Tipo de Usuário</Label>
+                    <Select
+                      value={newUser.role}
+                      onValueChange={(value: "user" | "admin") =>
+                        setNewUser((prev) => ({ ...prev, role: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">👤 Usuário Padrão</SelectItem>
+                        <SelectItem value="admin">🛡️ Administrador</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      Administradores têm acesso ao painel de controle
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="user-plan">Plano de Assinatura</Label>
+                    <Select
+                      value={newUser.plan}
+                      onValueChange={(value: "free" | "premium") =>
+                        setNewUser((prev) => ({ ...prev, plan: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="free">🆓 Gratuito</SelectItem>
+                        <SelectItem value="premium">👑 Premium</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      {newUser.plan === "premium"
+                        ? "Acesso completo aos recursos"
+                        : "Recursos limitados"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Preview do usuário */}
+                <div className="p-4 bg-muted/50 rounded-lg">
+                  <h4 className="font-medium mb-2">Preview do Usuário:</h4>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium">
+                        {newUser.name || "Nome do usuário"}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          {newUser.email || "email@exemplo.com"}
+                        </span>
+                        <Badge
+                          className={
+                            newUser.plan === "premium"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-gray-100 text-gray-700"
+                          }
+                        >
+                          {newUser.plan === "premium" ? "Premium" : "Gratuito"}
+                        </Badge>
+                        {newUser.role === "admin" && (
+                          <Badge className="bg-red-100 text-red-700">
+                            Admin
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Botões de Ação */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={handleCancelNewUser}
-                disabled={isCreatingUser}
-              >
-                Cancelar
-              </Button>
-              <Button
-                onClick={handleCreateUser}
-                disabled={isCreatingUser}
-                className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
-              >
-                {isCreatingUser ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Criando...
-                  </>
-                ) : (
-                  <>
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Criar Usuário
-                  </>
-                )}
-              </Button>
+              {/* Botões de Ação */}
+              <div className="flex justify-end gap-3 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={handleCancelNewUser}
+                  disabled={isCreatingUser}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleCreateUser}
+                  disabled={isCreatingUser}
+                  className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
+                >
+                  {isCreatingUser ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Criando...
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Criar Usuário
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
     </MainLayout>
   );
 }
