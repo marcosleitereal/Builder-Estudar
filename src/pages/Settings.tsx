@@ -17,6 +17,9 @@ import {
   Download,
   Trash2,
   Check,
+  Camera,
+  Upload,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,11 +48,13 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [settings, setSettings] = useState({
     // Perfil
     name: "João Silva",
     email: "joao.silva@email.com",
     language: "pt-BR",
+    avatar: null as string | null,
 
     // Aparência
     theme: "light",
