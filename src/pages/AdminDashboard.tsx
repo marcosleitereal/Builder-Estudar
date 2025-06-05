@@ -173,6 +173,18 @@ export default function AdminDashboard() {
     config: {},
   });
 
+  // Estados para modal de novo usuário
+  const [showNewUserModal, setShowNewUserModal] = useState(false);
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    plan: "free" as "free" | "premium",
+    role: "user" as "user" | "admin",
+    password: "",
+    confirmPassword: "",
+  });
+
   const handleSystemUpdate = (key: string, value: any) => {
     setSystemSettings((prev) => ({ ...prev, [key]: value }));
   };
