@@ -94,5 +94,25 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-size: var(--base-font-size, 16px);
+    font-family: var(--reading-font, "Inter", system-ui, sans-serif);
+    line-height: var(--line-height, 1.5);
+  }
+
+  /* Alto contraste */
+  .high-contrast {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 20%;
+    --border: 0 0% 50%;
+  }
+
+  .high-contrast.dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 80%;
+    --border: 0 0% 50%;
   }
 }
