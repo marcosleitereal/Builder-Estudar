@@ -221,12 +221,30 @@ export function Sidebar({ onClose }: SidebarProps) {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                  section.isExpandable && "pr-2",
+                  section.isExpandable && "pr-2"
                 )}
-                onClick={section.onClick || section.onToggle}
+                onClick={(e) => {
+                  if (section.isExpandable) {
+                    e.stopPropagation();
+                    section.onToggle();
+                  } else if (section.onClick) {
+                    section.onClick();
+                  }
+                }}
+              >
               >
                 <section.icon className="mr-3 h-4 w-4" />
-                <span className="flex-1 text-left">{section.title}</span>
+                <span
+                  className="flex-1 text-left cursor-pointer"
+                  onClick={(e) => {
+                    if (section.isExpandable && section.onClick) {
+                      e.stopPropagation();
+                      section.onClick();
+                    }
+                  }}
+                >
+                  {section.title}
+                </span>
                 {section.badge && (
                   <span className="ml-auto bg-burnt-500 text-white text-xs px-2 py-0.5 rounded-full">
                     {section.badge}
@@ -257,6 +275,14 @@ export function Sidebar({ onClose }: SidebarProps) {
                       variant="ghost"
                       size="sm"
                       className="w-full justify-start text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      onClick={() => {
+                        if (child.onClick) {
+                          child.onClick();
+                        } else if (section.onClick) {
+                          // Navegar para a página principal da seção
+                          section.onClick();
+                        }
+                      }}
                     >
                       <child.icon className="mr-3 h-3 w-3" />
                       <span className="flex-1 text-left">{child.title}</span>
