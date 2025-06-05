@@ -156,6 +156,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       isExpandable: true,
       isOpen: achievementsOpen,
       onToggle: () => setAchievementsOpen(!achievementsOpen),
+      onClick: () => (window.location.href = "/achievements"),
       children: [
         { title: t.trophies, icon: Trophy, count: 3 },
         { title: t.medals, icon: Medal, count: 4 },

@@ -5,3 +5,4 @@ export { RecentSummaries } from "./RecentSummaries";
 export { RecentFlashcards } from "./RecentFlashcards";
 export { RecentMindMaps } from "./RecentMindMaps";
 export { StudyStats } from "./StudyStats";
+export { AchievementsPreview } from "./AchievementsPreview";
