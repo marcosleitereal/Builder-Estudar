@@ -532,7 +532,7 @@ export default function AdminDashboard() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Vis��o Geral */}
+            {/* Visão Geral */}
             <TabsContent value="overview">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <Card>
@@ -1722,9 +1722,9 @@ export default function AdminDashboard() {
                     <Label htmlFor="user-plan">Plano de Assinatura</Label>
                     <Select
                       value={newUser.plan}
-                      onValueChange={(value: "free" | "premium") =>
-                        setNewUser((prev) => ({ ...prev, plan: value }))
-                      }
+                      onValueChange={(
+                        value: "free" | "premium" | "premium-admin",
+                      ) => setNewUser((prev) => ({ ...prev, plan: value }))}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -1732,12 +1732,25 @@ export default function AdminDashboard() {
                       <SelectContent>
                         <SelectItem value="free">🆓 Gratuito</SelectItem>
                         <SelectItem value="premium">👑 Premium</SelectItem>
+                        <SelectItem value="premium-admin">
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-600">🎁</span>
+                            <div>
+                              <div>Premium Gratuito</div>
+                              <div className="text-xs text-muted-foreground">
+                                Apenas para admins
+                              </div>
+                            </div>
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-muted-foreground">
                       {newUser.plan === "premium"
-                        ? "Acesso completo aos recursos"
-                        : "Recursos limitados"}
+                        ? "Acesso completo aos recursos com cobrança"
+                        : newUser.plan === "premium-admin"
+                          ? "Acesso completo sem custo - Só pode ser oferecido por administradores"
+                          : "Recursos limitados"}
                     </p>
                   </div>
                 </div>
