@@ -255,7 +255,13 @@ export function Sidebar({ onClose }: SidebarProps) {
                   </span>
                 )}
                 {section.isExpandable && (
-                  <div className="ml-2">
+                  <div
+                    className="ml-2 cursor-pointer hover:bg-sidebar-accent rounded p-1 -m-1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      section.onToggle();
+                    }}
+                  >
                     {section.isOpen ? (
                       <ChevronDown className="h-4 w-4" />
                     ) : (
