@@ -66,10 +66,8 @@ export function Sidebar({
   const toggleLanguage = () => {
     try {
       setCurrentLanguage((prev) => {
-        console.log("Idioma atual:", prev);
         const nextLanguage =
           prev === "pt-BR" ? "en-US" : prev === "en-US" ? "es-ES" : "pt-BR";
-        console.log("Próximo idioma:", nextLanguage);
         return nextLanguage;
       });
     } catch (error) {
@@ -85,7 +83,6 @@ export function Sidebar({
 
   const getLanguageFlag = () => {
     try {
-      console.log("Renderizando bandeira para:", currentLanguage);
       if (currentLanguage === "pt-BR") return <BrazilFlag size={16} />;
       if (currentLanguage === "en-US") return <USAFlag size={16} />;
       if (currentLanguage === "es-ES") return <SpainFlag size={16} />;
