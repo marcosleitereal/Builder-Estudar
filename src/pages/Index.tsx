@@ -1,6 +1,7 @@
 import { MainLayout } from "@/components/layout/MainLayout";
 import { GeneratePanel } from "@/components/study/GeneratePanel";
 import { WelcomeBanner } from "@/components/study/WelcomeBanner";
+import { RecentSummaries } from "@/components/study/RecentSummaries";
 
 const Index = () => {
   return (
@@ -17,6 +18,7 @@ const Index = () => {
         </div>
         <WelcomeBanner />
         <GeneratePanel />
+        <RecentSummaries />
       </div>
     </MainLayout>
   );
