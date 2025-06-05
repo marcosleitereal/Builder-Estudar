@@ -23,6 +23,7 @@ import {
   Star,
   Target,
   User,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -241,6 +242,17 @@ export function Sidebar({
       icon: Settings,
       onClick: () => (window.location.href = "/settings"),
     },
+    // Botão de admin - só aparece para administradores
+    ...(loggedUser.role === "admin"
+      ? [
+          {
+            title: t.adminPanel,
+            icon: Shield,
+            onClick: () => (window.location.href = "/admin"),
+            variant: "admin" as const,
+          },
+        ]
+      : []),
     {
       title: t.language,
       icon: Languages,
@@ -495,11 +507,20 @@ export function Sidebar({
           <Button
             key={section.title}
             variant={
-              section.variant === "destructive" ? "destructive" : "ghost"
+              section.variant === "destructive"
+                ? "destructive"
+                : section.variant === "admin"
+                  ? "ghost"
+                  : "ghost"
             }
             className={cn(
               "w-full justify-start",
+              section.variant === "destructive" &&
+                "text-destructive hover:bg-destructive/10",
+              section.variant === "admin" &&
+                "text-yellow-700 hover:bg-yellow-100 border border-yellow-200",
               section.variant !== "destructive" &&
+                section.variant !== "admin" &&
                 "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
             )}
             onClick={section.onClick}
