@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Importar animações dos flashcards */
+@import "./components/ui/flashcard-animations.css";
+
 @layer base {
   :root {
     --background: 43 77% 98%;
