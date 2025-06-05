@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./Sidebar";
@@ -15,6 +15,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex h-screen bg-background">
+      {/* Mobile sidebar overlay */}
       <div
         className={cn(
           "fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden",
@@ -23,11 +24,12 @@ export function MainLayout({ children }: MainLayoutProps) {
         onClick={() => setSidebarOpen(false)}
       />
 
+      {/* Sidebar */}
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          sidebarCollapsed ? "w-16" : "w-64"
+          sidebarCollapsed ? "w-16" : "w-64",
         )}
       >
         <Sidebar
@@ -36,6 +38,10 @@ export function MainLayout({ children }: MainLayoutProps) {
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
       </div>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Mobile header */}
         <div className="lg:hidden bg-white border-b border-border px-4 py-3 flex items-center justify-between">
           <Button
             variant="ghost"
@@ -49,11 +55,11 @@ export function MainLayout({ children }: MainLayoutProps) {
           <div className="w-10"></div>
         </div>
 
-        <main className="flex-1 overflow-auto p-4 lg:p-6">
-          {children}
-        </main>
+        {/* Main content area */}
+        <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
       </div>
 
+      {/* Navegação rápida para desenvolvimento */}
       <QuickNav />
     </div>
   );
