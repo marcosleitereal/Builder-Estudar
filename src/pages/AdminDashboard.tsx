@@ -180,6 +180,91 @@ export default function AdminDashboard() {
     setAiSettings((prev) => ({ ...prev, [key]: value }));
   };
 
+  const handleStorageUpdate = (
+    providerId: number,
+    updates: Partial<StorageProvider>,
+  ) => {
+    setStorageProviders((prev) =>
+      prev.map((provider) =>
+        provider.id === providerId ? { ...provider, ...updates } : provider,
+      ),
+    );
+  };
+
+  const handleAddStorageProvider = () => {
+    if (!newProvider.name || !newProvider.type) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    const provider: StorageProvider = {
+      id: Date.now(),
+      name: newProvider.name,
+      type: newProvider.type as StorageProvider["type"],
+      status: "disconnected",
+      isPrimary: storageProviders.length === 0,
+      isBackup: false,
+      config: newProvider.config || {},
+      createdAt: new Date().toISOString().split("T")[0],
+      lastTested: "Nunca",
+    };
+
+    setStorageProviders((prev) => [...prev, provider]);
+    setNewProvider({ name: "", type: "aws-s3", config: {} });
+  };
+
+  const handleDeleteStorageProvider = (providerId: number) => {
+    const provider = storageProviders.find((p) => p.id === providerId);
+    if (provider?.isPrimary) {
+      alert(
+        "Não é possível excluir o storage primário. Defina outro como primário primeiro.",
+      );
+      return;
+    }
+
+    const confirm = window.confirm(
+      "Tem certeza que deseja excluir este provedor de storage?",
+    );
+    if (confirm) {
+      setStorageProviders((prev) => prev.filter((p) => p.id !== providerId));
+    }
+  };
+
+  const handleSetPrimaryStorage = (providerId: number) => {
+    setStorageProviders((prev) =>
+      prev.map((provider) => ({
+        ...provider,
+        isPrimary: provider.id === providerId,
+      })),
+    );
+  };
+
+  const handleTestStorageConnection = async (providerId: number) => {
+    setStorageProviders((prev) =>
+      prev.map((provider) =>
+        provider.id === providerId
+          ? { ...provider, status: "connecting" as const }
+          : provider,
+      ),
+    );
+
+    // Simular teste de conexão
+    setTimeout(() => {
+      const isSuccess = Math.random() > 0.3; // 70% chance de sucesso
+      setStorageProviders((prev) =>
+        prev.map((provider) =>
+          provider.id === providerId
+            ? {
+                ...provider,
+                status: isSuccess ? "connected" : "error",
+                lastTested: new Date().toLocaleString("pt-BR"),
+              }
+            : provider,
+        ),
+      );
+    }, 2000);
+  };
+
   const handleUserAction = (userId: number, action: string) => {
     setUsers((prev) =>
       prev.map((user) => {
