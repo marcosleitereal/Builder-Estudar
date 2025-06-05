@@ -14,7 +14,7 @@ export function ProgressBar({
   return (
     <div className={cn("w-full", className)}>
       <div className="flex justify-between text-sm text-muted-foreground mb-2">
-        <span>Generating study material...</span>
+        <span>Gerando material de estudo...</span>
         <span>{Math.round(progress)}%</span>
       </div>
       <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
@@ -32,7 +32,8 @@ export function ProgressBar({
       </div>
       {isAnimating && (
         <div className="mt-2 text-xs text-muted-foreground animate-pulse">
-          AI is analyzing your content and creating personalized materials...
+          A IA está analisando seu conteúdo e criando materiais
+          personalizados...
         </div>
       )}
     </div>
