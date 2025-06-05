@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Settings as SettingsIcon,
@@ -16,6 +16,7 @@ import {
   Mail,
   Download,
   Trash2,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,10 +38,13 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("profile");
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
   const [settings, setSettings] = useState({
     // Perfil
     name: "João Silva",
@@ -65,25 +69,227 @@ export default function Settings() {
     analytics: true,
   });
 
+  // Carregar configurações salvas do localStorage
+  useEffect(() => {
+    const savedSettings = localStorage.getItem("studyai-settings");
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setSettings((prev) => ({ ...prev, ...parsed }));
+      } catch (error) {
+        console.error("Erro ao carregar configurações:", error);
+      }
+    }
+  }, []);
+
+  // Aplicar tema quando mudar
+  useEffect(() => {
+    applyTheme(settings.theme);
+  }, [settings.theme]);
+
+  // Aplicar cores quando mudar
+  useEffect(() => {
+    applyCustomColor(settings.customColor);
+  }, [settings.customColor]);
+
+  // Aplicar configurações de acessibilidade
+  useEffect(() => {
+    applyAccessibilitySettings();
+  }, [settings.fontSize, settings.readingMode, settings.highContrast]);
+
   const handleBackToDashboard = () => {
+    if (hasChanges) {
+      const confirm = window.confirm(
+        "Você tem alterações não salvas. Deseja sair mesmo assim?",
+      );
+      if (!confirm) return;
+    }
     window.history.back();
   };
 
-  const handleSaveSettings = () => {
-    console.log("Salvando configurações:", settings);
-    // Aqui implementaria a lógica de salvamento
+  const handleSaveSettings = async () => {
+    setIsSaving(true);
+
+    try {
+      // Simular salvamento
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Salvar no localStorage
+      localStorage.setItem("studyai-settings", JSON.stringify(settings));
+
+      setHasChanges(false);
+
+      // Mostrar notificação de sucesso
+      toast({
+        title: "Configurações salvas!",
+        description: "Suas configurações foram atualizadas com sucesso.",
+      });
+    } catch (error) {
+      console.error("Erro ao salvar configurações:", error);
+      toast({
+        title: "Erro ao salvar",
+        description:
+          "Ocorreu um erro ao salvar suas configurações. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleExportData = () => {
-    console.log("Exportando dados do usuário");
+  const handleExportData = async () => {
+    try {
+      const userData = {
+        settings,
+        timestamp: new Date().toISOString(),
+        version: "1.0",
+      };
+
+      const dataStr = JSON.stringify(userData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(dataBlob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `studyai-dados-${new Date().toISOString().split("T")[0]}.json`;
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Dados exportados!",
+        description: "Seus dados foram exportados com sucesso.",
+      });
+    } catch (error) {
+      console.error("Erro ao exportar dados:", error);
+      toast({
+        title: "Erro na exportação",
+        description: "Ocorreu um erro ao exportar seus dados.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDeleteAccount = () => {
-    console.log("Deletar conta - implementar confirmação");
+    const confirm = window.confirm(
+      "ATENÇÃO: Esta ação é irreversível!\n\n" +
+        "Todos os seus dados serão permanentemente removidos:\n" +
+        "- Resumos e materiais de estudo\n" +
+        "- Histórico e estatísticas\n" +
+        "- Configurações personalizadas\n" +
+        "- Conquistas e progresso\n\n" +
+        "Tem certeza que deseja excluir sua conta?",
+    );
+
+    if (confirm) {
+      const finalConfirm = window.confirm(
+        'Digite "EXCLUIR" para confirmar a exclusão da conta:',
+      );
+      if (finalConfirm) {
+        console.log("Conta excluída - implementar lógica de exclusão");
+        toast({
+          title: "Conta excluída",
+          description: "Sua conta foi excluída permanentemente.",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   const updateSetting = (key: string, value: any) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
+    setHasChanges(true);
+  };
+
+  // Função para aplicar tema
+  const applyTheme = (theme: string) => {
+    const root = document.documentElement;
+
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else if (theme === "light") {
+      root.classList.remove("dark");
+    } else if (theme === "system") {
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      if (prefersDark) {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+    }
+  };
+
+  // Função para aplicar cores personalizadas
+  const applyCustomColor = (color: string) => {
+    const root = document.documentElement;
+
+    const colorMap = {
+      burnt: {
+        primary: "28 85% 53%",
+        "primary-foreground": "0 0% 100%",
+      },
+      blue: {
+        primary: "221 83% 53%",
+        "primary-foreground": "0 0% 100%",
+      },
+      green: {
+        primary: "142 76% 36%",
+        "primary-foreground": "0 0% 100%",
+      },
+      purple: {
+        primary: "263 70% 50%",
+        "primary-foreground": "0 0% 100%",
+      },
+      red: {
+        primary: "0 84% 60%",
+        "primary-foreground": "0 0% 100%",
+      },
+    };
+
+    const colors = colorMap[color as keyof typeof colorMap] || colorMap.burnt;
+
+    Object.entries(colors).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+  };
+
+  // Função para aplicar configurações de acessibilidade
+  const applyAccessibilitySettings = () => {
+    const root = document.documentElement;
+
+    // Tamanho da fonte
+    const fontSizeMap = {
+      small: "14px",
+      medium: "16px",
+      large: "18px",
+      "extra-large": "20px",
+    };
+
+    root.style.setProperty(
+      "--base-font-size",
+      fontSizeMap[settings.fontSize as keyof typeof fontSizeMap] || "16px",
+    );
+
+    // Modo leitura
+    if (settings.readingMode) {
+      root.style.setProperty(
+        "--reading-font",
+        '"Georgia", "Times New Roman", serif',
+      );
+      root.style.setProperty("--line-height", "1.8");
+    } else {
+      root.style.removeProperty("--reading-font");
+      root.style.removeProperty("--line-height");
+    }
+
+    // Alto contraste
+    if (settings.highContrast) {
+      root.classList.add("high-contrast");
+    } else {
+      root.classList.remove("high-contrast");
+    }
   };
 
   const colorOptions = [
@@ -127,10 +333,20 @@ export default function Settings() {
 
               <Button
                 onClick={handleSaveSettings}
+                disabled={!hasChanges || isSaving}
                 className="bg-gradient-to-r from-burnt-500 to-terracotta-600 hover:from-burnt-600 hover:to-terracotta-700 text-white"
               >
-                <Save className="h-4 w-4 mr-2" />
-                Salvar Alterações
+                {isSaving ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    {hasChanges ? "Salvar Alterações" : "Salvo"}
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -276,6 +492,9 @@ export default function Settings() {
                           <span className="text-sm font-medium">
                             {theme.label}
                           </span>
+                          {settings.theme === theme.value && (
+                            <Check className="h-4 w-4 text-burnt-600" />
+                          )}
                         </div>
                       ))}
                     </div>
@@ -301,6 +520,9 @@ export default function Settings() {
                             className={cn("w-6 h-6 rounded-full", color.class)}
                           />
                           <span className="text-xs">{color.label}</span>
+                          {settings.customColor === color.value && (
+                            <Check className="h-3 w-3 text-burnt-600" />
+                          )}
                         </div>
                       ))}
                     </div>
