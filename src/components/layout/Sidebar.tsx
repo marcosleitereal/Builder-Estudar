@@ -13,6 +13,14 @@ import {
   Brain,
   Lightbulb,
   X,
+  MessageSquare,
+  AlertCircle,
+  Info,
+  CheckCircle,
+  Trophy,
+  Medal,
+  Star,
+  Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,6 +32,8 @@ interface SidebarProps {
 
 export function Sidebar({ onClose }: SidebarProps) {
   const [studyHistoryOpen, setStudyHistoryOpen] = useState(true);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [achievementsOpen, setAchievementsOpen] = useState(false);
 
   const navigationSections = [
     {
@@ -48,11 +58,29 @@ export function Sidebar({ onClose }: SidebarProps) {
       title: "Notificações",
       icon: Bell,
       count: 4,
+      isExpandable: true,
+      isOpen: notificationsOpen,
+      onToggle: () => setNotificationsOpen(!notificationsOpen),
+      children: [
+        { title: "Não Lidas", icon: MessageSquare, count: 2 },
+        { title: "Alertas", icon: AlertCircle, count: 1 },
+        { title: "Informações", icon: Info, count: 1 },
+        { title: "Confirmações", icon: CheckCircle, count: 0 },
+      ],
     },
     {
       title: "Conquistas",
       icon: Award,
       count: 8,
+      isExpandable: true,
+      isOpen: achievementsOpen,
+      onToggle: () => setAchievementsOpen(!achievementsOpen),
+      children: [
+        { title: "Troféus", icon: Trophy, count: 3 },
+        { title: "Medalhas", icon: Medal, count: 4 },
+        { title: "Estrelas", icon: Star, count: 1 },
+        { title: "Objetivos", icon: Target, count: 0 },
+      ],
     },
   ];
 
