@@ -298,6 +298,8 @@ export default function AdminDashboard() {
               return { ...user, status: "active" as const };
             case "premium":
               return { ...user, plan: "premium" as const };
+            case "premium-admin":
+              return { ...user, plan: "premium-admin" as const };
             case "free":
               return { ...user, plan: "free" as const };
             default:
