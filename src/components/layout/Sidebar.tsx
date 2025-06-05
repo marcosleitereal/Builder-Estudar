@@ -50,6 +50,14 @@ export function Sidebar({ onClose }: SidebarProps) {
     return currentLanguage === "pt-BR" ? "🇧🇷" : "🇺🇸";
   };
 
+  const getLanguageInfo = () => {
+    return {
+      display: getLanguageDisplay(),
+      flag: getLanguageFlag(),
+      code: currentLanguage,
+    };
+  };
+
   // Textos dinâmicos baseados no idioma selecionado
   const texts = {
     "pt-BR": {
@@ -159,9 +167,10 @@ export function Sidebar({ onClose }: SidebarProps) {
     {
       title: t.language,
       icon: Languages,
-      subtitle: getLanguageDisplay(),
+      subtitle: `${getLanguageFlag()} ${getLanguageDisplay()}`,
       flag: getLanguageFlag(),
       onClick: toggleLanguage,
+      isLanguageSelector: true,
     },
     {
       title: t.logout,
@@ -278,12 +287,28 @@ export function Sidebar({ onClose }: SidebarProps) {
             <section.icon className="mr-3 h-4 w-4" />
             <div className="flex-1 text-left">
               <div className="flex items-center gap-2">
-                {section.title}
-                {section.flag && <span>{section.flag}</span>}
+                <span>{section.title}</span>
+                {section.isLanguageSelector && (
+                  <div className="ml-auto flex items-center gap-1 px-2 py-1 bg-burnt-100 rounded-md">
+                    <span className="text-base leading-none">
+                      {getLanguageFlag()}
+                    </span>
+                    <span className="text-xs font-medium text-burnt-700">
+                      {currentLanguage === "pt-BR" ? "PT" : "EN"}
+                    </span>
+                  </div>
+                )}
               </div>
-              {section.subtitle && (
+              {section.subtitle && !section.isLanguageSelector && (
                 <div className="text-xs text-sidebar-foreground/60">
                   {section.subtitle}
+                </div>
+              )}
+              {section.isLanguageSelector && (
+                <div className="text-xs text-sidebar-foreground/60 mt-1">
+                  {currentLanguage === "pt-BR"
+                    ? "Clique para alterar para English"
+                    : "Click to change to Português"}
                 </div>
               )}
             </div>
