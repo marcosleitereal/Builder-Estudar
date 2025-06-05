@@ -17,14 +17,18 @@ export function MainLayout({ children }: MainLayoutProps) {
   // Auto-collapse sidebar when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node) && !sidebarCollapsed) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node) &&
+        !sidebarCollapsed
+      ) {
         setSidebarCollapsed(true);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [sidebarCollapsed]);
 
@@ -45,9 +49,10 @@ export function MainLayout({ children }: MainLayoutProps) {
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          sidebarCollapsed ? "w-16" : "w-64"
+          sidebarCollapsed ? "w-16" : "w-64",
         )}
       >
+        <Sidebar
           onClose={() => setSidebarOpen(false)}
           isCollapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
