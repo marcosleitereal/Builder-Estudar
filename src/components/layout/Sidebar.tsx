@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BookOpen,
   Crown,
@@ -57,35 +57,54 @@ export function Sidebar({
     "pt-BR" | "en-US" | "es-ES"
   >("pt-BR");
 
-  // Carregar dados do usuário logado do localStorage
-  const getUserData = (): LoggedUser => {
-    try {
-      const savedSettings = localStorage.getItem("studyai-settings");
-      if (savedSettings) {
-        const settings = JSON.parse(savedSettings);
-        return {
-          name: settings.name || "João Silva",
-          email: settings.email || "joao@email.com",
-          plan: "premium",
-          role: "admin", // admin ou user
-          avatar: settings.avatar || undefined,
-        };
+  // Estado para dados do usuário logado
+  const [loggedUser, setLoggedUser] = useState<LoggedUser>({
+    name: "João Silva",
+    email: "joao@email.com",
+    plan: "premium",
+    role: "admin",
+    avatar: undefined,
+  });
+
+  // Carregar dados do usuário do localStorage
+  useEffect(() => {
+    const loadUserData = () => {
+      try {
+        const savedSettings = localStorage.getItem("studyai-settings");
+        if (savedSettings) {
+          const settings = JSON.parse(savedSettings);
+          setLoggedUser((prev) => ({
+            ...prev,
+            name: settings.name || prev.name,
+            email: settings.email || prev.email,
+            avatar: settings.avatar || undefined,
+          }));
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error);
       }
-    } catch (error) {
-      console.error("Erro ao carregar dados do usuário:", error);
-    }
-
-    // Fallback para dados padrão
-    return {
-      name: "João Silva",
-      email: "joao@email.com",
-      plan: "premium",
-      role: "admin",
-      avatar: undefined,
     };
-  };
 
-  const loggedUser = getUserData();
+    loadUserData();
+
+    // Escutar mudanças no localStorage (quando atualizar nas configurações)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "studyai-settings") {
+        loadUserData();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Criar um evento customizado para mudanças internas
+    const handleCustomUpdate = () => loadUserData();
+    window.addEventListener("userDataUpdated", handleCustomUpdate);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("userDataUpdated", handleCustomUpdate);
+    };
+  }, []);
 
   const toggleLanguage = () => {
     try {
