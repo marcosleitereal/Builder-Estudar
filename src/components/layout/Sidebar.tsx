@@ -433,6 +433,7 @@ export function Sidebar({
                   ? `${loggedUser.name} (${loggedUser.plan === "premium" ? t.planPremium : t.planFree})`
                   : undefined
               }
+              onClick={() => (window.location.href = "/settings")}
             >
               {loggedUser.avatar ? (
                 <img
