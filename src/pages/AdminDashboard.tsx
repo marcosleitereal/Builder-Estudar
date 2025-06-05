@@ -852,6 +852,387 @@ export default function AdminDashboard() {
               </Card>
             </TabsContent>
 
+            {/* Configurações de Storage */}
+            <TabsContent value="storage">
+              <div className="space-y-6">
+                {/* Resumo dos Storage Providers */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            Provedores Ativos
+                          </p>
+                          <p className="text-2xl font-bold text-foreground">
+                            {
+                              storageProviders.filter(
+                                (p) => p.status === "connected",
+                              ).length
+                            }
+                          </p>
+                        </div>
+                        <Cloud className="h-8 w-8 text-blue-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            Storage Primário
+                          </p>
+                          <p className="text-lg font-semibold text-foreground">
+                            {storageProviders.find((p) => p.isPrimary)?.name ||
+                              "Nenhum"}
+                          </p>
+                        </div>
+                        <HardDrive className="h-8 w-8 text-green-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            Backups Configurados
+                          </p>
+                          <p className="text-2xl font-bold text-foreground">
+                            {storageProviders.filter((p) => p.isBackup).length}
+                          </p>
+                        </div>
+                        <Shield className="h-8 w-8 text-yellow-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Lista de Storage Providers */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Provedores de Storage</CardTitle>
+                    <CardDescription>
+                      Gerencie os serviços de armazenamento para arquivos dos
+                      usuários
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {storageProviders.map((provider) => (
+                      <div
+                        key={provider.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            {provider.type === "aws-s3" && (
+                              <Cloud className="h-5 w-5 text-orange-600" />
+                            )}
+                            {provider.type === "google-cloud" && (
+                              <Cloud className="h-5 w-5 text-blue-600" />
+                            )}
+                            {provider.type === "azure-blob" && (
+                              <Cloud className="h-5 w-5 text-blue-800" />
+                            )}
+                            {provider.type === "local" && (
+                              <HardDrive className="h-5 w-5 text-gray-600" />
+                            )}
+                            {provider.type === "minio" && (
+                              <Database className="h-5 w-5 text-red-600" />
+                            )}
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <p className="font-medium">{provider.name}</p>
+                                {provider.isPrimary && (
+                                  <Badge className="bg-green-100 text-green-700">
+                                    Primário
+                                  </Badge>
+                                )}
+                                {provider.isBackup && (
+                                  <Badge className="bg-blue-100 text-blue-700">
+                                    Backup
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                {provider.type.toUpperCase()} • Último teste:{" "}
+                                {provider.lastTested}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            {provider.status === "connected" && (
+                              <>
+                                <Wifi className="h-4 w-4 text-green-600" />
+                                <span className="text-sm text-green-600">
+                                  Conectado
+                                </span>
+                              </>
+                            )}
+                            {provider.status === "disconnected" && (
+                              <>
+                                <WifiOff className="h-4 w-4 text-gray-600" />
+                                <span className="text-sm text-gray-600">
+                                  Desconectado
+                                </span>
+                              </>
+                            )}
+                            {provider.status === "error" && (
+                              <>
+                                <XCircle className="h-4 w-4 text-red-600" />
+                                <span className="text-sm text-red-600">
+                                  Erro
+                                </span>
+                              </>
+                            )}
+                          </div>
+
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleTestStorageConnection(provider.id)
+                              }
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                            </Button>
+
+                            {!provider.isPrimary && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleSetPrimaryStorage(provider.id)
+                                }
+                              >
+                                Definir Primário
+                              </Button>
+                            )}
+
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                const updates = {
+                                  isBackup: !provider.isBackup,
+                                };
+                                handleStorageUpdate(provider.id, updates);
+                              }}
+                            >
+                              {provider.isBackup
+                                ? "Remover Backup"
+                                : "Definir Backup"}
+                            </Button>
+
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() =>
+                                handleDeleteStorageProvider(provider.id)
+                              }
+                              disabled={provider.isPrimary}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                {/* Adicionar Novo Provider */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Adicionar Novo Provedor</CardTitle>
+                    <CardDescription>
+                      Configure um novo serviço de storage
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Nome do Provedor</Label>
+                        <Input
+                          placeholder="Ex: AWS S3 Principal"
+                          value={newProvider.name}
+                          onChange={(e) =>
+                            setNewProvider((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Tipo de Storage</Label>
+                        <Select
+                          value={newProvider.type}
+                          onValueChange={(value) =>
+                            setNewProvider((prev) => ({
+                              ...prev,
+                              type: value as StorageProvider["type"],
+                            }))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="aws-s3">AWS S3</SelectItem>
+                            <SelectItem value="google-cloud">
+                              Google Cloud Storage
+                            </SelectItem>
+                            <SelectItem value="azure-blob">
+                              Azure Blob Storage
+                            </SelectItem>
+                            <SelectItem value="minio">MinIO</SelectItem>
+                            <SelectItem value="local">Local Storage</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {/* Configurações específicas por tipo */}
+                    {newProvider.type !== "local" && (
+                      <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium">
+                          Configurações de Conexão
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label>Access Key / ID</Label>
+                            <Input
+                              placeholder="Access Key"
+                              value={newProvider.config?.accessKey || ""}
+                              onChange={(e) =>
+                                setNewProvider((prev) => ({
+                                  ...prev,
+                                  config: {
+                                    ...prev.config,
+                                    accessKey: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Secret Key</Label>
+                            <Input
+                              type="password"
+                              placeholder="Secret Key"
+                              value={newProvider.config?.secretKey || ""}
+                              onChange={(e) =>
+                                setNewProvider((prev) => ({
+                                  ...prev,
+                                  config: {
+                                    ...prev.config,
+                                    secretKey: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Bucket / Container</Label>
+                            <Input
+                              placeholder="Nome do bucket"
+                              value={newProvider.config?.bucket || ""}
+                              onChange={(e) =>
+                                setNewProvider((prev) => ({
+                                  ...prev,
+                                  config: {
+                                    ...prev.config,
+                                    bucket: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Região</Label>
+                            <Input
+                              placeholder="us-east-1"
+                              value={newProvider.config?.region || ""}
+                              onChange={(e) =>
+                                setNewProvider((prev) => ({
+                                  ...prev,
+                                  config: {
+                                    ...prev.config,
+                                    region: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
+
+                          {newProvider.type === "minio" && (
+                            <div className="space-y-2 md:col-span-2">
+                              <Label>Endpoint</Label>
+                              <Input
+                                placeholder="https://minio.exemplo.com"
+                                value={newProvider.config?.endpoint || ""}
+                                onChange={(e) =>
+                                  setNewProvider((prev) => ({
+                                    ...prev,
+                                    config: {
+                                      ...prev.config,
+                                      endpoint: e.target.value,
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {newProvider.type === "local" && (
+                      <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+                        <h4 className="font-medium">Configurações Local</h4>
+                        <div className="space-y-2">
+                          <Label>Caminho no Servidor</Label>
+                          <Input
+                            placeholder="/var/www/uploads"
+                            value={newProvider.config?.path || ""}
+                            onChange={(e) =>
+                              setNewProvider((prev) => ({
+                                ...prev,
+                                config: {
+                                  ...prev.config,
+                                  path: e.target.value,
+                                },
+                              }))
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <Button
+                      onClick={handleAddStorageProvider}
+                      className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Adicionar Provedor de Storage
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
             {/* Configurações Visuais */}
             <TabsContent value="visual">
               <Card>
