@@ -437,11 +437,20 @@ export default function AdminDashboard() {
   };
 
   const getPlanBadge = (plan: string) => {
-    return plan === "premium" ? (
-      <Badge className="bg-yellow-100 text-yellow-700">Premium</Badge>
-    ) : (
-      <Badge variant="outline">Gratuito</Badge>
-    );
+    switch (plan) {
+      case "premium":
+        return <Badge className="bg-yellow-100 text-yellow-700">Premium</Badge>;
+      case "premium-admin":
+        return (
+          <Badge className="bg-green-100 text-green-700 border-green-200">
+            Premium Gratuito
+          </Badge>
+        );
+      case "free":
+        return <Badge variant="outline">Gratuito</Badge>;
+      default:
+        return <Badge variant="outline">Desconhecido</Badge>;
+    }
   };
 
   return (
