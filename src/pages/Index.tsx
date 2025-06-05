@@ -2,6 +2,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { GeneratePanel } from "@/components/study/GeneratePanel";
 import { WelcomeBanner } from "@/components/study/WelcomeBanner";
 import { RecentSummaries } from "@/components/study/RecentSummaries";
+import { RecentFlashcards } from "@/components/study/RecentFlashcards";
 
 const Index = () => {
   return (
@@ -18,7 +19,10 @@ const Index = () => {
         </div>
         <WelcomeBanner />
         <GeneratePanel />
-        <RecentSummaries />
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <RecentSummaries />
+          <RecentFlashcards />
+        </div>
       </div>
     </MainLayout>
   );
