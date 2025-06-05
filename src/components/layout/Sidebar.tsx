@@ -242,7 +242,7 @@ export function Sidebar({
   return (
     <div
       className={cn(
-        "h-full bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300",
+        "h-full bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-500 ease-out",
         isCollapsed ? "w-16" : "w-64",
       )}
     >
@@ -254,7 +254,7 @@ export function Sidebar({
               <Brain className="h-5 w-5 text-white" />
             </div>
             {!isCollapsed && (
-              <h1 className="text-xl font-bold text-sidebar-foreground">
+              <h1 className="text-xl font-bold text-sidebar-foreground transition-opacity duration-300">
                 StudyAI
               </h1>
             )}
@@ -285,7 +285,7 @@ export function Sidebar({
           </div>
         </div>
         {!isCollapsed && (
-          <p className="text-sm text-sidebar-foreground/70 mt-1">
+          <p className="text-sm text-sidebar-foreground/70 mt-1 transition-opacity duration-300">
             {t.platform}
           </p>
         )}
