@@ -20,6 +20,11 @@ import {
   CheckCircle,
   AlertTriangle,
   XCircle,
+  Cloud,
+  HardDrive,
+  Plus,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,6 +58,25 @@ interface User {
   status: "active" | "inactive" | "banned";
   joinDate: string;
   lastActive: string;
+}
+
+interface StorageProvider {
+  id: number;
+  name: string;
+  type: "aws-s3" | "google-cloud" | "azure-blob" | "local" | "minio";
+  status: "connected" | "disconnected" | "error";
+  isPrimary: boolean;
+  isBackup: boolean;
+  config: {
+    accessKey?: string;
+    secretKey?: string;
+    bucket?: string;
+    region?: string;
+    endpoint?: string;
+    path?: string;
+  };
+  createdAt: string;
+  lastTested: string;
 }
 
 const mockUsers: User[] = [
@@ -107,6 +131,45 @@ export default function AdminDashboard() {
     enableVision: true,
     rateLimitPremium: 100,
     rateLimitFree: 3,
+  });
+
+  const [storageProviders, setStorageProviders] = useState<StorageProvider[]>([
+    {
+      id: 1,
+      name: "AWS S3 Principal",
+      type: "aws-s3",
+      status: "connected",
+      isPrimary: true,
+      isBackup: false,
+      config: {
+        bucket: "studyai-files",
+        region: "us-east-1",
+        accessKey: "AKIA...",
+        secretKey: "***",
+      },
+      createdAt: "2024-01-15",
+      lastTested: "2024-12-15",
+    },
+    {
+      id: 2,
+      name: "Google Cloud Backup",
+      type: "google-cloud",
+      status: "connected",
+      isPrimary: false,
+      isBackup: true,
+      config: {
+        bucket: "studyai-backup",
+        region: "us-central1",
+      },
+      createdAt: "2024-02-01",
+      lastTested: "2024-12-14",
+    },
+  ]);
+
+  const [newProvider, setNewProvider] = useState<Partial<StorageProvider>>({
+    name: "",
+    type: "aws-s3",
+    config: {},
   });
 
   const handleSystemUpdate = (key: string, value: any) => {
