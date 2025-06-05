@@ -9,6 +9,7 @@ import SummaryView from "./pages/SummaryView";
 import FlashcardsStudy from "./pages/FlashcardsStudy";
 import MindMapView from "./pages/MindMapView";
 import StudyHistory from "./pages/StudyHistory";
+import Achievements from "./pages/Achievements";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/flashcards/:id" element={<FlashcardsStudy />} />
           <Route path="/mindmap/:id" element={<MindMapView />} />
           <Route path="/history" element={<StudyHistory />} />
+          <Route path="/achievements" element={<Achievements />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
