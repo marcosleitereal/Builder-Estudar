@@ -25,7 +25,7 @@ export function QuickNav() {
         <Button
           onClick={() => setIsOpen(true)}
           size="sm"
-          className="rounded-full shadow-lg bg-burnt-500 hover:bg-burnt-600 text-white"
+          className="rounded-full shadow-lg bg-burnt-500 hover:bg-burnt-600 text-white font-medium"
         >
           <Menu className="h-4 w-4" />
         </Button>
@@ -37,14 +37,16 @@ export function QuickNav() {
           className="fixed inset-0 bg-black/50 z-50"
           onClick={() => setIsOpen(false)}
         >
-          <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-xl p-4 min-w-[200px]">
+          <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-xl p-4 min-w-[200px] border border-gray-200">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-sm">Navegaç��o Rápida</h3>
+              <h3 className="font-semibold text-sm text-foreground">
+                Navegação Rápida
+              </h3>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsOpen(false)}
-                className="h-6 w-6 p-0"
+                className="h-6 w-6 p-0 hover:bg-gray-100"
               >
                 <X className="h-3 w-3" />
               </Button>
@@ -57,10 +59,19 @@ export function QuickNav() {
                     window.location.href = page.path;
                     setIsOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 p-2 text-sm hover:bg-gray-100 rounded"
+                  className={cn(
+                    "w-full flex items-center gap-2 p-2 text-sm font-medium",
+                    "hover:bg-gray-100 rounded transition-colors",
+                    "text-left text-foreground",
+                  )}
                 >
-                  <div className={cn("w-2 h-2 rounded-full", page.color)} />
-                  {page.name}
+                  <div
+                    className={cn(
+                      "w-2 h-2 rounded-full flex-shrink-0",
+                      page.color,
+                    )}
+                  />
+                  <span className="truncate">{page.name}</span>
                 </button>
               ))}
             </div>
