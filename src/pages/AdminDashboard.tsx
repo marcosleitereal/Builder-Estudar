@@ -532,7 +532,7 @@ export default function AdminDashboard() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Visão Geral */}
+            {/* Vis��o Geral */}
             <TabsContent value="overview">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <Card>
@@ -775,28 +775,75 @@ export default function AdminDashboard() {
                                     : "Ativar"}
                                 </Button>
                                 {user.plan === "free" ? (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
-                                    onClick={() =>
-                                      handlePromoteToPremium(user.id)
-                                    }
-                                  >
-                                    <Crown className="h-3 w-3 mr-1" />
-                                    Promover Premium
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() =>
-                                      handleUserAction(user.id, "free")
-                                    }
-                                  >
-                                    Rebaixar para Gratuito
-                                  </Button>
-                                )}
+                                  <>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                                      onClick={() =>
+                                        handlePromoteToPremium(user.id)
+                                      }
+                                    >
+                                      <Crown className="h-3 w-3 mr-1" />
+                                      Premium Pago
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                                      onClick={() =>
+                                        handlePromoteToPremiumAdmin(user.id)
+                                      }
+                                    >
+                                      <Crown className="h-3 w-3 mr-1" />
+                                      Premium Grátis
+                                    </Button>
+                                  </>
+                                ) : user.plan === "premium" ? (
+                                  <>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() =>
+                                        handleUserAction(user.id, "free")
+                                      }
+                                    >
+                                      Rebaixar para Gratuito
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                                      onClick={() =>
+                                        handlePromoteToPremiumAdmin(user.id)
+                                      }
+                                    >
+                                      Converter p/ Premium Grátis
+                                    </Button>
+                                  </>
+                                ) : user.plan === "premium-admin" ? (
+                                  <>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() =>
+                                        handleUserAction(user.id, "free")
+                                      }
+                                    >
+                                      Rebaixar para Gratuito
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                                      onClick={() =>
+                                        handleUserAction(user.id, "premium")
+                                      }
+                                    >
+                                      Converter p/ Premium Pago
+                                    </Button>
+                                  </>
+                                ) : null}
                                 <Button
                                   size="sm"
                                   variant="destructive"
@@ -1120,7 +1167,7 @@ export default function AdminDashboard() {
                                 )}
                               </div>
                               <p className="text-sm text-muted-foreground">
-                                {provider.type.toUpperCase()} ��� Último teste:{" "}
+                                {provider.type.toUpperCase()} • Último teste:{" "}
                                 {provider.lastTested}
                               </p>
                             </div>
