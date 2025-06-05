@@ -1,38 +1,23 @@
+import { MainLayout } from "@/components/layout/MainLayout";
+import { GeneratePanel } from "@/components/study/GeneratePanel";
+
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="text-center">
-        {/* TODO: replace everything here with the actual app! */}
-        <h1 className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-3">
-          <svg
-            className="animate-spin h-8 w-8 text-slate-400"
-            viewBox="0 0 50 50"
-          >
-            <circle
-              className="opacity-30"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-            />
-            <circle
-              className="text-slate-600"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="100"
-              strokeDashoffset="75"
-            />
-          </svg>
-          Generating your app...
-        </h1>
+    <MainLayout>
+      <div className="space-y-6">
+        <div className="text-center max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Welcome to StudyAI
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Transform your learning materials into personalized study content
+            with the power of AI
+          </p>
+        </div>
+
+        <GeneratePanel />
       </div>
-    </div>
+    </MainLayout>
   );
 };
 
