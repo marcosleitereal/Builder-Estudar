@@ -27,30 +27,30 @@ export function Sidebar({ onClose }: SidebarProps) {
 
   const navigationSections = [
     {
-      title: "Study History",
+      title: "Histórico de Estudos",
       icon: BookOpen,
       isExpandable: true,
       isOpen: studyHistoryOpen,
       onToggle: () => setStudyHistoryOpen(!studyHistoryOpen),
       children: [
-        { title: "Drafts", icon: FileText, count: 3 },
-        { title: "Simulated Exams", icon: Brain, count: 5 },
+        { title: "Rascunhos", icon: FileText, count: 3 },
+        { title: "Simulados", icon: Brain, count: 5 },
         { title: "Flashcards", icon: Lightbulb, count: 12 },
-        { title: "Mind Maps", icon: BookOpen, count: 2 },
+        { title: "Mapas Mentais", icon: BookOpen, count: 2 },
       ],
     },
     {
-      title: "Subscription",
+      title: "Assinatura",
       icon: Crown,
       badge: "Premium",
     },
     {
-      title: "Notifications",
+      title: "Notificações",
       icon: Bell,
       count: 4,
     },
     {
-      title: "Achievements",
+      title: "Conquistas",
       icon: Award,
       count: 8,
     },
@@ -58,16 +58,16 @@ export function Sidebar({ onClose }: SidebarProps) {
 
   const bottomSections = [
     {
-      title: "Settings",
+      title: "Configurações",
       icon: Settings,
     },
     {
-      title: "Language",
+      title: "Idioma",
       icon: Languages,
-      subtitle: "English",
+      subtitle: "Português (BR)",
     },
     {
-      title: "Logout",
+      title: "Sair",
       icon: LogOut,
       variant: "destructive" as const,
     },
@@ -96,7 +96,7 @@ export function Sidebar({ onClose }: SidebarProps) {
           </Button>
         </div>
         <p className="text-sm text-sidebar-foreground/70 mt-1">
-          AI-Powered Learning Platform
+          Plataforma de Aprendizado com IA
         </p>
       </div>
 
