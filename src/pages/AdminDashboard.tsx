@@ -59,6 +59,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { VisualColorPicker } from "@/components/admin/VisualColorPicker";
 import { cn } from "@/lib/utils";
 
 interface User {
@@ -312,6 +313,15 @@ export default function AdminDashboard() {
     );
   };
 
+  const handleDeleteUser = (userId: number) => {
+    const confirm = window.confirm(
+      "Tem certeza que deseja excluir este usuário?",
+    );
+    if (confirm) {
+      setUsers((prev) => prev.filter((user) => user.id !== userId));
+    }
+  };
+
   const handlePromoteToPremium = (userId: number) => {
     const user = users.find((u) => u.id === userId);
     if (!user) return;
@@ -322,7 +332,6 @@ export default function AdminDashboard() {
 
     if (confirm) {
       handleUserAction(userId, "premium");
-      // Toast ou notificação de sucesso poderia ser adicionada aqui
       alert(`${user.name} foi promovido para Premium com sucesso!`);
     }
   };
@@ -432,15 +441,6 @@ export default function AdminDashboard() {
     setShowNewUserModal(false);
   };
 
-  const handleDeleteUser = (userId: number) => {
-    const confirm = window.confirm(
-      "Tem certeza que deseja excluir este usuário?",
-    );
-    if (confirm) {
-      setUsers((prev) => prev.filter((user) => user.id !== userId));
-    }
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
@@ -479,26 +479,18 @@ export default function AdminDashboard() {
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-600 rounded-lg flex items-center justify-center">
-                    <Shield className="h-5 w-5 text-white" />
-                  </div>
-                  Painel de Administração
+                <h1 className="text-2xl font-bold text-foreground">
+                  Painel Administrativo
                 </h1>
-                <p className="text-sm text-muted-foreground">
-                  Controle total do sistema StudyAI
+                <p className="text-muted-foreground">
+                  Gerencie usuários, configurações e sistema
                 </p>
               </div>
-
-              <Button className="bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white">
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Sincronizar Dados
-              </Button>
             </div>
           </div>
         </div>
 
-        {/* Conteúdo principal */}
+        {/* Content */}
         <div className="max-w-7xl mx-auto px-4 py-6">
           <Tabs
             value={activeTab}
@@ -547,14 +539,10 @@ export default function AdminDashboard() {
                           Total de Usuários
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                          1,234
+                          {users.length}
                         </p>
                       </div>
                       <Users className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-green-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      +12.5% este mês
                     </div>
                   </CardContent>
                 </Card>
@@ -567,14 +555,16 @@ export default function AdminDashboard() {
                           Usuários Premium
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                          423
+                          {
+                            users.filter(
+                              (u) =>
+                                u.plan === "premium" ||
+                                u.plan === "premium-admin",
+                            ).length
+                          }
                         </p>
                       </div>
-                      <DollarSign className="h-8 w-8 text-yellow-600" />
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-green-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      +8.3% este mês
+                      <Crown className="h-8 w-8 text-yellow-600" />
                     </div>
                   </CardContent>
                 </Card>
@@ -584,17 +574,17 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Gerações IA
+                          Storage Ativo
                         </p>
                         <p className="text-2xl font-bold text-foreground">
-                          15.6K
+                          {
+                            storageProviders.filter(
+                              (p) => p.status === "connected",
+                            ).length
+                          }
                         </p>
                       </div>
-                      <Brain className="h-8 w-8 text-purple-600" />
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-green-600">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      +23.1% este mês
+                      <Cloud className="h-8 w-8 text-green-600" />
                     </div>
                   </CardContent>
                 </Card>
@@ -604,101 +594,13 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Status Sistema
+                          Sistema
                         </p>
-                        <p className="text-2xl font-bold text-green-600">
-                          Saudável
+                        <p className="text-2xl font-bold text-foreground">
+                          Online
                         </p>
                       </div>
                       <Activity className="h-8 w-8 text-green-600" />
-                    </div>
-                    <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Todos os serviços OK
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Atividade Recente</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {[
-                        {
-                          action: "Novo usuário registrado",
-                          user: "maria@email.com",
-                          time: "2 min atrás",
-                        },
-                        {
-                          action: "Upgrade para Premium",
-                          user: "joao@email.com",
-                          time: "15 min atrás",
-                        },
-                        {
-                          action: "Geração de resumo",
-                          user: "pedro@email.com",
-                          time: "1h atrás",
-                        },
-                        {
-                          action: "Login realizado",
-                          user: "ana@email.com",
-                          time: "2h atrás",
-                        },
-                      ].map((activity, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between py-2 border-b last:border-0"
-                        >
-                          <div>
-                            <p className="text-sm font-medium">
-                              {activity.action}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {activity.user}
-                            </p>
-                          </div>
-                          <span className="text-xs text-muted-foreground">
-                            {activity.time}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Alertas do Sistema</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-yellow-800">
-                            Alto uso de API
-                          </p>
-                          <p className="text-xs text-yellow-700">
-                            95% do limite mensal atingido
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                        <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-green-800">
-                            Backup concluído
-                          </p>
-                          <p className="text-xs text-green-700">
-                            Último backup: hoje às 03:00
-                          </p>
-                        </div>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -713,7 +615,7 @@ export default function AdminDashboard() {
                     <div>
                       <CardTitle>Gerenciamento de Usuários</CardTitle>
                       <CardDescription>
-                        Visualize e gerencie todos os usuários do sistema
+                        Gerencie contas de usuário, planos e permissões
                       </CardDescription>
                     </div>
                     <Button
@@ -733,7 +635,7 @@ export default function AdminDashboard() {
                           <th className="text-left p-2">Usuário</th>
                           <th className="text-left p-2">Plano</th>
                           <th className="text-left p-2">Status</th>
-                          <th className="text-left p-2">Última Atividade</th>
+                          <th className="text-left p-2">Último Acesso</th>
                           <th className="text-left p-2">Ações</th>
                         </tr>
                       </thead>
@@ -761,7 +663,7 @@ export default function AdminDashboard() {
                               )}
                             </td>
                             <td className="p-2">
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 flex-wrap">
                                 <Button
                                   size="sm"
                                   variant="outline"
@@ -868,12 +770,15 @@ export default function AdminDashboard() {
 
             {/* Configurações do Sistema */}
             <TabsContent value="system">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Configurações Gerais</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Configurações do Sistema</CardTitle>
+                  <CardDescription>
+                    Configure parâmetros gerais do sistema
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label>Nome do Site</Label>
                       <Input
@@ -883,9 +788,8 @@ export default function AdminDashboard() {
                         }
                       />
                     </div>
-
                     <div className="space-y-2">
-                      <Label>E-mail de Suporte</Label>
+                      <Label>Email de Suporte</Label>
                       <Input
                         value={systemSettings.supportEmail}
                         onChange={(e) =>
@@ -893,79 +797,28 @@ export default function AdminDashboard() {
                         }
                       />
                     </div>
+                  </div>
 
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Modo Manutenção</Label>
-                        <p className="text-sm text-muted-foreground">
-                          Desabilita acesso ao site
-                        </p>
-                      </div>
-                      <Switch
-                        checked={systemSettings.maintenanceMode}
-                        onCheckedChange={(checked) =>
-                          handleSystemUpdate("maintenanceMode", checked)
-                        }
-                      />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <Label>Modo de Manutenção</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Desativa temporariamente o acesso ao sistema
+                      </p>
                     </div>
+                    <Switch
+                      checked={systemSettings.maintenanceMode}
+                      onCheckedChange={(checked) =>
+                        handleSystemUpdate("maintenanceMode", checked)
+                      }
+                    />
+                  </div>
 
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label>Registros Habilitados</Label>
-                        <p className="text-sm text-muted-foreground">
-                          Permite novos cadastros
-                        </p>
-                      </div>
-                      <Switch
-                        checked={systemSettings.registrationsEnabled}
-                        onCheckedChange={(checked) =>
-                          handleSystemUpdate("registrationsEnabled", checked)
-                        }
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Configurações de Planos</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>Limite Gerações Gratuitas</Label>
-                      <Input
-                        type="number"
-                        value={systemSettings.maxFreeGenerations}
-                        onChange={(e) =>
-                          handleSystemUpdate(
-                            "maxFreeGenerations",
-                            parseInt(e.target.value),
-                          )
-                        }
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Preço Premium (R$)</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        value={systemSettings.premiumPrice}
-                        onChange={(e) =>
-                          handleSystemUpdate(
-                            "premiumPrice",
-                            parseFloat(e.target.value),
-                          )
-                        }
-                      />
-                    </div>
-
-                    <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-                      Salvar Configurações
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
+                  <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white">
+                    Salvar Configurações
+                  </Button>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* Configurações de IA */}
@@ -1009,52 +862,6 @@ export default function AdminDashboard() {
                         }
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label>Temperatura (0-1)</Label>
-                      <Input
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="1"
-                        value={aiSettings.temperature}
-                        onChange={(e) =>
-                          handleAiUpdate(
-                            "temperature",
-                            parseFloat(e.target.value),
-                          )
-                        }
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Limite Premium/Dia</Label>
-                      <Input
-                        type="number"
-                        value={aiSettings.rateLimitPremium}
-                        onChange={(e) =>
-                          handleAiUpdate(
-                            "rateLimitPremium",
-                            parseInt(e.target.value),
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label>Habilitar Visão IA</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Permite análise de imagens
-                      </p>
-                    </div>
-                    <Switch
-                      checked={aiSettings.enableVision}
-                      onCheckedChange={(checked) =>
-                        handleAiUpdate("enableVision", checked)
-                      }
-                    />
                   </div>
 
                   <Button className="w-full bg-gradient-to-r from-purple-500 to-violet-600 text-white">
@@ -1067,724 +874,98 @@ export default function AdminDashboard() {
 
             {/* Configurações de Storage */}
             <TabsContent value="storage">
-              <div className="space-y-6">
-                {/* Resumo dos Storage Providers */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">
-                            Provedores Ativos
-                          </p>
-                          <p className="text-2xl font-bold text-foreground">
-                            {
-                              storageProviders.filter(
-                                (p) => p.status === "connected",
-                              ).length
-                            }
-                          </p>
-                        </div>
-                        <Cloud className="h-8 w-8 text-blue-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">
-                            Storage Primário
-                          </p>
-                          <p className="text-lg font-semibold text-foreground">
-                            {storageProviders.find((p) => p.isPrimary)?.name ||
-                              "Nenhum"}
-                          </p>
-                        </div>
-                        <HardDrive className="h-8 w-8 text-green-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">
-                            Backups Configurados
-                          </p>
-                          <p className="text-2xl font-bold text-foreground">
-                            {storageProviders.filter((p) => p.isBackup).length}
-                          </p>
-                        </div>
-                        <Shield className="h-8 w-8 text-yellow-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Lista de Storage Providers */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Provedores de Storage</CardTitle>
-                    <CardDescription>
-                      Gerencie os serviços de armazenamento para arquivos dos
-                      usuários
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {storageProviders.map((provider) => (
-                      <div
-                        key={provider.id}
-                        className="flex items-center justify-between p-4 border rounded-lg"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            {provider.type === "aws-s3" && (
-                              <Cloud className="h-5 w-5 text-orange-600" />
-                            )}
-                            {provider.type === "google-cloud" && (
-                              <Cloud className="h-5 w-5 text-blue-600" />
-                            )}
-                            {provider.type === "azure-blob" && (
-                              <Cloud className="h-5 w-5 text-blue-800" />
-                            )}
-                            {provider.type === "local" && (
-                              <HardDrive className="h-5 w-5 text-gray-600" />
-                            )}
-                            {provider.type === "minio" && (
-                              <Database className="h-5 w-5 text-red-600" />
-                            )}
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <p className="font-medium">{provider.name}</p>
-                                {provider.isPrimary && (
-                                  <Badge className="bg-green-100 text-green-700">
-                                    Primário
-                                  </Badge>
-                                )}
-                                {provider.isBackup && (
-                                  <Badge className="bg-blue-100 text-blue-700">
-                                    Backup
-                                  </Badge>
-                                )}
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                {provider.type.toUpperCase()} • Último teste:{" "}
-                                {provider.lastTested}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            {provider.status === "connected" && (
-                              <>
-                                <Wifi className="h-4 w-4 text-green-600" />
-                                <span className="text-sm text-green-600">
-                                  Conectado
-                                </span>
-                              </>
-                            )}
-                            {provider.status === "disconnected" && (
-                              <>
-                                <WifiOff className="h-4 w-4 text-gray-600" />
-                                <span className="text-sm text-gray-600">
-                                  Desconectado
-                                </span>
-                              </>
-                            )}
-                            {provider.status === "error" && (
-                              <>
-                                <XCircle className="h-4 w-4 text-red-600" />
-                                <span className="text-sm text-red-600">
-                                  Erro
-                                </span>
-                              </>
-                            )}
-                          </div>
-
-                          <div className="flex gap-1">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                handleTestStorageConnection(provider.id)
-                              }
-                            >
-                              <RefreshCw className="h-4 w-4" />
-                            </Button>
-
-                            {!provider.isPrimary && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() =>
-                                  handleSetPrimaryStorage(provider.id)
-                                }
-                              >
-                                Definir Primário
-                              </Button>
-                            )}
-
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                const updates = {
-                                  isBackup: !provider.isBackup,
-                                };
-                                handleStorageUpdate(provider.id, updates);
-                              }}
-                            >
-                              {provider.isBackup
-                                ? "Remover Backup"
-                                : "Definir Backup"}
-                            </Button>
-
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() =>
-                                handleDeleteStorageProvider(provider.id)
-                              }
-                              disabled={provider.isPrimary}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-
-                {/* Adicionar Novo Provider */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Adicionar Novo Provedor</CardTitle>
-                    <CardDescription>
-                      Configure um novo serviço de storage
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>Nome do Provedor</Label>
-                        <Input
-                          placeholder="Ex: AWS S3 Principal"
-                          value={newProvider.name}
-                          onChange={(e) =>
-                            setNewProvider((prev) => ({
-                              ...prev,
-                              name: e.target.value,
-                            }))
-                          }
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label>Tipo de Storage</Label>
-                        <Select
-                          value={newProvider.type}
-                          onValueChange={(value) =>
-                            setNewProvider((prev) => ({
-                              ...prev,
-                              type: value as StorageProvider["type"],
-                            }))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="aws-s3">AWS S3</SelectItem>
-                            <SelectItem value="google-cloud">
-                              Google Cloud Storage
-                            </SelectItem>
-                            <SelectItem value="azure-blob">
-                              Azure Blob Storage
-                            </SelectItem>
-                            <SelectItem value="minio">MinIO</SelectItem>
-                            <SelectItem value="local">Local Storage</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-            {/* Configurações Visuais */}
-            <TabsContent value="visual">
-              <div className="space-y-6">
-                {/* Paleta de Cores Primárias */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Palette className="h-5 w-5 text-blue-600" />
-                      Cor Primária do Sistema
-                    </CardTitle>
-                    <CardDescription>
-                      Escolha a cor principal que será usada em botões, links e elementos de destaque
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Paleta de cores pré-definidas */}
-                    <div>
-                      <Label className="text-sm font-medium mb-3 block">Cores Populares</Label>
-                      <div className="grid grid-cols-8 gap-3">
-                        {[
-                          { name: "Azul", color: "#3B82F6" },
-                          { name: "Verde", color: "#10B981" },
-                          { name: "Roxo", color: "#8B5CF6" },
-                          { name: "Rosa", color: "#EC4899" },
-                          { name: "Vermelho", color: "#EF4444" },
-                          { name: "Laranja", color: "#F59E0B" },
-                          { name: "Índigo", color: "#6366F1" },
-                          { name: "Teal", color: "#14B8A6" },
-                          { name: "Ciano", color: "#06B6D4" },
-                          { name: "Amarelo", color: "#EAB308" },
-                          { name: "Esmeralda", color: "#059669" },
-                          { name: "Violeta", color: "#7C3AED" },
-                          { name: "Padrão", color: "#D4831A" },
-                          { name: "Cinza", color: "#6B7280" },
-                          { name: "Slate", color: "#475569" },
-                          { name: "Stone", color: "#78716C" },
-                        ].map((colorOption) => (
-                          <button
-                            key={colorOption.name}
-                            className={cn(
-                              "w-12 h-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 relative border-2",
-                              systemSettings.primaryColor === colorOption.color
-                                ? "border-gray-800 ring-2 ring-gray-400"
-                                : "border-gray-200 hover:border-gray-300"
-                            )}
-                            style={{ backgroundColor: colorOption.color }}
-                            onClick={() => handleSystemUpdate("primaryColor", colorOption.color)}
-                            title={`${colorOption.name} - ${colorOption.color}`}
-                          >
-                            {systemSettings.primaryColor === colorOption.color && (
-                              <CheckCircle className="h-4 w-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Color picker personalizado */}
-                    <div>
-                      <Label className="text-sm font-medium mb-3 block">Cor Personalizada</Label>
-                      <div className="flex items-center gap-4">
-                        <div className="relative">
-                          <Input
-                            type="color"
-                            value={systemSettings.primaryColor}
-                            onChange={(e) => handleSystemUpdate("primaryColor", e.target.value)}
-                            className="w-16 h-12 p-1 rounded-lg cursor-pointer"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <Input
-                            value={systemSettings.primaryColor}
-                            onChange={(e) => handleSystemUpdate("primaryColor", e.target.value)}
-                            placeholder="#000000"
-                            className="font-mono"
-                          />
-                        </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => handleSystemUpdate("primaryColor", "#D4831A")}
-                          className="text-sm"
-                        >
-                          Resetar
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Paleta de Cores Secundárias */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Palette className="h-5 w-5 text-purple-600" />
-                      Cor Secundária do Sistema
-                    </CardTitle>
-                    <CardDescription>
-                      Escolha a cor secundária usada em elementos de apoio e acentos
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Paleta de cores secundárias */}
-                    <div>
-                      <Label className="text-sm font-medium mb-3 block">Cores Populares</Label>
-                      <div className="grid grid-cols-8 gap-3">
-                        {[
-                          { name: "Azul Claro", color: "#60A5FA" },
-                          { name: "Verde Claro", color: "#34D399" },
-                          { name: "Roxo Claro", color: "#A78BFA" },
-                          { name: "Rosa Claro", color: "#F472B6" },
-                          { name: "Vermelho Claro", color: "#F87171" },
-                          { name: "Laranja Claro", color: "#FBBF24" },
-                          { name: "Índigo Claro", color: "#818CF8" },
-                          { name: "Teal Claro", color: "#2DD4BF" },
-                          { name: "Ciano Claro", color: "#22D3EE" },
-                          { name: "Amarelo Claro", color: "#FDE047" },
-                          { name: "Esmeralda Claro", color: "#10B981" },
-                          { name: "Violeta Claro", color: "#8B5CF6" },
-                          { name: "Padrão", color: "#D97556" },
-                          { name: "Cinza Claro", color: "#9CA3AF" },
-                          { name: "Slate Claro", color: "#64748B" },
-                          { name: "Stone Claro", color: "#A8A29E" },
-                        ].map((colorOption) => (
-                          <button
-                            key={colorOption.name}
-                            className={cn(
-                              "w-12 h-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 relative border-2",
-                              systemSettings.secondaryColor === colorOption.color
-                                ? "border-gray-800 ring-2 ring-gray-400"
-                                : "border-gray-200 hover:border-gray-300"
-                            )}
-                            style={{ backgroundColor: colorOption.color }}
-                            onClick={() => handleSystemUpdate("secondaryColor", colorOption.color)}
-                            title={`${colorOption.name} - ${colorOption.color}`}
-                          >
-                            {systemSettings.secondaryColor === colorOption.color && (
-                              <CheckCircle className="h-4 w-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Color picker personalizado */}
-                    <div>
-                      <Label className="text-sm font-medium mb-3 block">Cor Personalizada</Label>
-                      <div className="flex items-center gap-4">
-                        <div className="relative">
-                          <Input
-                            type="color"
-                            value={systemSettings.secondaryColor}
-                            onChange={(e) => handleSystemUpdate("secondaryColor", e.target.value)}
-                            className="w-16 h-12 p-1 rounded-lg cursor-pointer"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <Input
-                            value={systemSettings.secondaryColor}
-                            onChange={(e) => handleSystemUpdate("secondaryColor", e.target.value)}
-                            placeholder="#000000"
-                            className="font-mono"
-                          />
-                        </div>
-                        <Button
-                          variant="outline"
-                          onClick={() => handleSystemUpdate("secondaryColor", "#D97556")}
-                          className="text-sm"
-                        >
-                          Resetar
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Preview Avançado */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Eye className="h-5 w-5 text-green-600" />
-                      Preview das Cores Selecionadas
-                    </CardTitle>
-                    <CardDescription>
-                      Veja como as cores escolhidas aparecerão na interface do sistema
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Preview Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Cor Primária */}
-                      <div className="space-y-3">
-                        <Label className="text-sm font-medium">Elementos Primários</Label>
-                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50">
-                          <Button
-                            className="w-full text-white font-medium"
-                            style={{ backgroundColor: systemSettings.primaryColor }}
-                          >
-                            Botão Principal
-                          </Button>
-                          <div
-                            className="h-3 rounded-full w-3/4"
-                            style={{ backgroundColor: systemSettings.primaryColor }}
-                          ></div>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded"
-                              style={{ backgroundColor: systemSettings.primaryColor }}
-                            ></div>
-                            <span style={{ color: systemSettings.primaryColor }} className="font-medium">
-                              Link/Texto em Destaque
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Cor Secundária */}
-                      <div className="space-y-3">
-                        <Label className="text-sm font-medium">Elementos Secundários</Label>
-                        <div className="space-y-3 p-4 border rounded-lg bg-gray-50">
-                          <Button
-                            variant="outline"
-                            className="w-full border-2 font-medium"
-                            style={{
-                              borderColor: systemSettings.secondaryColor,
-                              color: systemSettings.secondaryColor
-                            }}
-                          >
-                            Botão Secundário
-                          </Button>
-                          <div
-                            className="h-2 rounded-full w-3/4 opacity-60"
-                            style={{ backgroundColor: systemSettings.secondaryColor }}
-                          ></div>
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-4 h-4 rounded opacity-60"
-                              style={{ backgroundColor: systemSettings.secondaryColor }}
-                            ></div>
-                            <span style={{ color: systemSettings.secondaryColor }} className="opacity-80">
-                              Elementos de Apoio
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Combinação das Cores */}
-                    <div className="p-6 rounded-lg border-2" style={{
-                      background: `linear-gradient(135deg, ${systemSettings.primaryColor}15, ${systemSettings.secondaryColor}15)`,
-                      borderColor: systemSettings.primaryColor + '40'
-                    }}>
-                      <h4 className="font-semibold text-lg mb-2" style={{ color: systemSettings.primaryColor }}>
-                        Preview da Combinação
-                      </h4>
-                      <p className="text-gray-600 mb-4">
-                        Esta é uma demonstração de como as cores escolhidas funcionam juntas na interface.
-                      </p>
-                      <div className="flex gap-3">
-                        <Button
-                          size="sm"
-                          className="text-white"
-                          style={{ backgroundColor: systemSettings.primaryColor }}
-                        >
-                          Ação Principal
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          style={{
-                            borderColor: systemSettings.secondaryColor,
-                            color: systemSettings.secondaryColor
-                          }}
-                        >
-                          Ação Secundária
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Códigos das Cores */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-8 h-8 rounded-md border"
-                          style={{ backgroundColor: systemSettings.primaryColor }}
-                        ></div>
-                        <div>
-                          <p className="text-sm font-medium">Cor Primária</p>
-                          <p className="text-xs font-mono text-gray-600">{systemSettings.primaryColor}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-8 h-8 rounded-md border"
-                          style={{ backgroundColor: systemSettings.secondaryColor }}
-                        ></div>
-                        <div>
-                          <p className="text-sm font-medium">Cor Secundária</p>
-                          <p className="text-xs font-mono text-gray-600">{systemSettings.secondaryColor}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Botões de Ação */}
-                <div className="flex gap-4 justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      handleSystemUpdate("primaryColor", "#D4831A");
-                      handleSystemUpdate("secondaryColor", "#D97556");
-                    }}
-                  >
-                    Restaurar Padrão
-                  </Button>
-                  <Button
-                    className="text-white px-6"
-                    style={{
-                      background: `linear-gradient(135deg, ${systemSettings.primaryColor}, ${systemSettings.secondaryColor})`
-                    }}
-                  >
-                    <Palette className="h-4 w-4 mr-2" />
-                    Aplicar Configurações
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Configurações Visuais */}
-            <TabsContent value="visual">
               <Card>
                 <CardHeader>
-                  <CardTitle>Personalização Visual</CardTitle>
+                  <CardTitle>Configuração de Storage</CardTitle>
                   <CardDescription>
-                    Customize a aparência do sistema
+                    Gerencie os serviços de armazenamento para arquivos dos
+                    usuários
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label>Cor Primária</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          type="color"
-                          value={systemSettings.primaryColor}
-                          onChange={(e) =>
-                            handleSystemUpdate("primaryColor", e.target.value)
+                <CardContent className="space-y-4">
+                  {storageProviders.map((provider) => (
+                    <div
+                      key={provider.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Cloud className="h-5 w-5 text-blue-600" />
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">{provider.name}</p>
+                            {provider.isPrimary && (
+                              <Badge className="bg-green-100 text-green-700">
+                                Primário
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {provider.type.toUpperCase()}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            handleTestStorageConnection(provider.id)
                           }
-                          className="w-20"
-                        />
-                        <Input
-                          value={systemSettings.primaryColor}
-                          onChange={(e) =>
-                            handleSystemUpdate("primaryColor", e.target.value)
+                        >
+                          <RefreshCw className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() =>
+                            handleDeleteStorageProvider(provider.id)
                           }
-                          className="flex-1"
-                        />
+                          disabled={provider.isPrimary}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <Label>Cor Secundária</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          type="color"
-                          value={systemSettings.secondaryColor}
-                          onChange={(e) =>
-                            handleSystemUpdate("secondaryColor", e.target.value)
-                          }
-                          className="w-20"
-                        />
-                        <Input
-                          value={systemSettings.secondaryColor}
-                          onChange={(e) =>
-                            handleSystemUpdate("secondaryColor", e.target.value)
-                          }
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 border rounded-lg bg-muted/30">
-                    <h4 className="font-medium mb-2">Preview das Cores</h4>
-                    <div className="flex gap-4">
-                      <div
-                        className="w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-medium"
-                        style={{ backgroundColor: systemSettings.primaryColor }}
-                      >
-                        Primary
-                      </div>
-                      <div
-                        className="w-16 h-16 rounded-lg shadow-lg flex items-center justify-center text-white font-medium"
-                        style={{
-                          backgroundColor: systemSettings.secondaryColor,
-                        }}
-                      >
-                        Secondary
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white">
-                    <Palette className="h-4 w-4 mr-2" />
-                    Aplicar Mudanças Visuais
-                  </Button>
+                  ))}
                 </CardContent>
               </Card>
             </TabsContent>
 
-            {/* Banco de Dados */}
+            {/* Configurações Visuais */}
+            <TabsContent value="visual">
+              <VisualColorPicker
+                primaryColor={systemSettings.primaryColor}
+                secondaryColor={systemSettings.secondaryColor}
+                onPrimaryColorChange={(color) =>
+                  handleSystemUpdate("primaryColor", color)
+                }
+                onSecondaryColorChange={(color) =>
+                  handleSystemUpdate("secondaryColor", color)
+                }
+              />
+            </TabsContent>
+
+            {/* Configurações de Banco */}
             <TabsContent value="database">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Backup e Restauração</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-3">
-                      <Button className="w-full" variant="outline">
-                        <Download className="h-4 w-4 mr-2" />
-                        Fazer Backup Completo
-                      </Button>
-                      <Button className="w-full" variant="outline">
-                        <Upload className="h-4 w-4 mr-2" />
-                        Restaurar Backup
-                      </Button>
-                    </div>
-
-                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <p className="text-sm text-blue-800">
-                        <strong>Último backup:</strong> 15/12/2024 às 03:00
-                      </p>
-                      <p className="text-xs text-blue-700 mt-1">
-                        Backup automático: Diário às 03:00
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Estatísticas do Banco</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-sm">Total de Usuários:</span>
-                        <span className="font-medium">1,234</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Resumos Gerados:</span>
-                        <span className="font-medium">5,678</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Flashcards Criados:</span>
-                        <span className="font-medium">12,456</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm">Tamanho do Banco:</span>
-                        <span className="font-medium">2.3 GB</span>
-                      </div>
-                    </div>
-
-                    <Button className="w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white">
-                      <Database className="h-4 w-4 mr-2" />
-                      Otimizar Banco de Dados
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Gerenciamento de Banco de Dados</CardTitle>
+                  <CardDescription>
+                    Ferramentas para backup, otimização e manutenção
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Button className="w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white">
+                    <Database className="h-4 w-4 mr-2" />
+                    Fazer Backup do Banco
+                  </Button>
+                  <Button className="w-full bg-gradient-to-r from-indigo-500 to-blue-600 text-white">
+                    <Database className="h-4 w-4 mr-2" />
+                    Otimizar Banco de Dados
+                  </Button>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </div>
@@ -1805,7 +986,6 @@ export default function AdminDashboard() {
             </DialogHeader>
 
             <div className="space-y-6 py-4">
-              {/* Informações Básicas */}
               <div className="space-y-4">
                 <h3 className="font-medium text-lg">Informações Básicas</h3>
 
@@ -1892,7 +1072,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Permissões e Plano */}
               <div className="space-y-4">
                 <h3 className="font-medium text-lg">Permissões e Plano</h3>
 
@@ -1913,9 +1092,6 @@ export default function AdminDashboard() {
                         <SelectItem value="admin">🛡️ Administrador</SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-xs text-muted-foreground">
-                      Administradores têm acesso ao painel de controle
-                    </p>
                   </div>
 
                   <div className="space-y-2">
@@ -1933,70 +1109,14 @@ export default function AdminDashboard() {
                         <SelectItem value="free">🆓 Gratuito</SelectItem>
                         <SelectItem value="premium">👑 Premium</SelectItem>
                         <SelectItem value="premium-admin">
-                          <div className="flex items-center gap-2">
-                            <span className="text-green-600">🎁</span>
-                            <div>
-                              <div>Premium Gratuito</div>
-                              <div className="text-xs text-muted-foreground">
-                                Apenas para admins
-                              </div>
-                            </div>
-                          </div>
+                          🎁 Premium Gratuito
                         </SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-xs text-muted-foreground">
-                      {newUser.plan === "premium"
-                        ? "Acesso completo aos recursos com cobrança"
-                        : newUser.plan === "premium-admin"
-                          ? "Acesso completo sem custo - Só pode ser oferecido por administradores"
-                          : "Recursos limitados"}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Preview do usuário */}
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-medium mb-2">Preview do Usuário:</h4>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center">
-                      <User className="h-5 w-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium">
-                        {newUser.name || "Nome do usuário"}
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">
-                          {newUser.email || "email@exemplo.com"}
-                        </span>
-                        <Badge
-                          className={
-                            newUser.plan === "premium"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : newUser.plan === "premium-admin"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-gray-100 text-gray-700"
-                          }
-                        >
-                          {newUser.plan === "premium"
-                            ? "Premium"
-                            : newUser.plan === "premium-admin"
-                              ? "Premium Gratuito"
-                              : "Gratuito"}
-                        </Badge>
-                        {newUser.role === "admin" && (
-                          <Badge className="bg-red-100 text-red-700">
-                            Admin
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Botões de Ação */}
               <div className="flex justify-end gap-3 pt-4 border-t">
                 <Button
                   variant="outline"
