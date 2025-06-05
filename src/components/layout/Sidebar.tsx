@@ -34,6 +34,7 @@ interface LoggedUser {
   name: string;
   email: string;
   plan: "free" | "premium";
+  role: "user" | "admin";
   avatar?: string;
 }
 
@@ -60,6 +61,7 @@ export function Sidebar({
     name: "João Silva",
     email: "joao@email.com",
     plan: "premium",
+    role: "admin", // admin ou user
     avatar: undefined, // Para usar o ícone padrão
   };
 
@@ -120,6 +122,7 @@ export function Sidebar({
       planFree: "Gratuito",
       planPremium: "Premium",
       userProfile: "Perfil do Usuário",
+      adminPanel: "Painel Admin",
     },
     "en-US": {
       studyHistory: "Study History",
@@ -146,6 +149,7 @@ export function Sidebar({
       planFree: "Free",
       planPremium: "Premium",
       userProfile: "User Profile",
+      adminPanel: "Admin Panel",
     },
     "es-ES": {
       studyHistory: "Historial de Estudios",
@@ -172,6 +176,7 @@ export function Sidebar({
       planFree: "Gratuito",
       planPremium: "Premium",
       userProfile: "Perfil de Usuario",
+      adminPanel: "Panel Admin",
     },
   };
 
