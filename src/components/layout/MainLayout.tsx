@@ -18,14 +18,19 @@ export function MainLayout({ children }: MainLayoutProps) {
   // Auto-collapse sidebar when clicking outside (but not when hovering)
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node) && !sidebarCollapsed && !isHovering) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node) &&
+        !sidebarCollapsed &&
+        !isHovering
+      ) {
         setSidebarCollapsed(true);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [sidebarCollapsed, isHovering]);
 
@@ -35,11 +40,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div
         className={cn(
           "fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden",
-        <Sidebar
-          onClose={() => setSidebarOpen(false)}
-          isCollapsed={sidebarCollapsed && !isHovering}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
+          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+        )}
+        onClick={() => setSidebarOpen(false)}
       />
 
       {/* Sidebar */}
@@ -48,13 +51,14 @@ export function MainLayout({ children }: MainLayoutProps) {
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          (sidebarCollapsed && !isHovering) ? "w-16" : "w-64"
+          sidebarCollapsed && !isHovering ? "w-16" : "w-64",
         )}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
+        <Sidebar
           onClose={() => setSidebarOpen(false)}
-          isCollapsed={sidebarCollapsed}
+          isCollapsed={sidebarCollapsed && !isHovering}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
       </div>
