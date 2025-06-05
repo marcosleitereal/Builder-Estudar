@@ -26,7 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { QuickStats } from "./QuickStats";
-import { BrazilFlag, USAFlag } from "@/components/ui/flags";
+import { BrazilFlag, USAFlag, SpainFlag } from "@/components/ui/flags";
 
 interface SidebarProps {
   onClose?: () => void;
@@ -63,7 +63,7 @@ export function Sidebar({
   const getLanguageFlag = () => {
     if (currentLanguage === "pt-BR") return <BrazilFlag size={16} />;
     if (currentLanguage === "en-US") return <USAFlag size={16} />;
-    return <span className="text-sm">🇪🇸</span>;
+    return <SpainFlag size={16} />;
   };
 
   // Textos dinâmicos baseados no idioma selecionado

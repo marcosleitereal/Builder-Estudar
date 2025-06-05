@@ -12,25 +12,22 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Auto-collapse sidebar when clicking outside
+  // Auto-collapse sidebar when clicking outside (but not when hovering)
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node) &&
-        !sidebarCollapsed
-      ) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node) && !sidebarCollapsed && !isHovering) {
         setSidebarCollapsed(true);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [sidebarCollapsed]);
+  }, [sidebarCollapsed, isHovering]);
 
   return (
     <div className="flex h-screen bg-background">
@@ -38,9 +35,11 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div
         className={cn(
           "fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden",
-          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none",
-        )}
-        onClick={() => setSidebarOpen(false)}
+        <Sidebar
+          onClose={() => setSidebarOpen(false)}
+          isCollapsed={sidebarCollapsed && !isHovering}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
       />
 
       {/* Sidebar */}
@@ -49,10 +48,11 @@ export function MainLayout({ children }: MainLayoutProps) {
         className={cn(
           "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          sidebarCollapsed ? "w-16" : "w-64",
+          (sidebarCollapsed && !isHovering) ? "w-16" : "w-64"
         )}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
       >
-        <Sidebar
           onClose={() => setSidebarOpen(false)}
           isCollapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
