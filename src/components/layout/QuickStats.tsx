@@ -2,7 +2,7 @@ import { Brain, Target, Clock, Trophy } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface QuickStatsProps {
-  language?: "pt-BR" | "en-US";
+  language?: "pt-BR" | "en-US" | "es-ES";
 }
 
 export function QuickStats({ language = "pt-BR" }: QuickStatsProps) {
@@ -21,9 +21,16 @@ export function QuickStats({ language = "pt-BR" }: QuickStatsProps) {
       studyTime: "Study Time",
       achievements: "Achievements",
     },
+    "es-ES": {
+      progress: "Tu Progreso",
+      studySessions: "Sesiones de Estudio",
+      accuracyRate: "Tasa de Acierto",
+      studyTime: "Tiempo de Estudio",
+      achievements: "Logros",
+    },
   };
 
-  const t = texts[language];
+  const t = texts[language] || texts["pt-BR"];
 
   const stats = [
     {
