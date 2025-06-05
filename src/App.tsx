@@ -16,7 +16,6 @@ import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminTest from "./pages/AdminTest";
 
 const queryClient = new QueryClient();
 
