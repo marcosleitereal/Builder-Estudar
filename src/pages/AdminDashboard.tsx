@@ -686,7 +686,10 @@ export default function AdminDashboard() {
                         Visualize e gerencie todos os usuários do sistema
                       </CardDescription>
                     </div>
-                    <Button className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white">
+                    <Button
+                      onClick={() => setShowNewUserModal(true)}
+                      className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white"
+                    >
                       <UserPlus className="h-4 w-4 mr-2" />
                       Novo Usuário
                     </Button>
