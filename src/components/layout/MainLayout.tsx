@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./Sidebar";
+import { QuickNav } from "@/components/ui/QuickNav";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -46,6 +47,9 @@ export function MainLayout({ children }: MainLayoutProps) {
 
         <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
       </div>
+
+      {/* Navegação rápida para desenvolvimento */}
+      <QuickNav />
     </div>
   );
 }
