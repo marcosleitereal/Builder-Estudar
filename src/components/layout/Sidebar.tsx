@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { QuickStats } from "./QuickStats";
 
 interface SidebarProps {
   onClose?: () => void;
@@ -160,6 +161,9 @@ export function Sidebar({ onClose }: SidebarProps) {
           ))}
         </nav>
       </div>
+
+      {/* Quick Stats */}
+      <QuickStats />
 
       {/* Bottom section */}
       <div className="border-t border-sidebar-border p-4 space-y-2">
