@@ -416,6 +416,55 @@ export function Sidebar({
       {/* Quick Stats */}
       {!isCollapsed && <QuickStats language={currentLanguage} />}
 
+      {/* User Info Section */}
+      <div className="border-t border-sidebar-border p-4">
+        <div
+          className={cn(
+            "flex items-center gap-3 mb-4",
+            isCollapsed ? "justify-center" : "justify-start",
+          )}
+        >
+          {/* Avatar */}
+          <div className="flex-shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-full flex items-center justify-center">
+              {loggedUser.avatar ? (
+                <img
+                  src={loggedUser.avatar}
+                  alt={loggedUser.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <User className="h-5 w-5 text-white" />
+              )}
+            </div>
+          </div>
+
+          {/* User Info - só mostra quando expandida */}
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-sm font-medium text-sidebar-foreground truncate">
+                  {loggedUser.name}
+                </p>
+                <Badge
+                  className={cn(
+                    "text-xs px-2 py-0.5",
+                    loggedUser.plan === "premium"
+                      ? "bg-yellow-100 text-yellow-700 border-yellow-200"
+                      : "bg-gray-100 text-gray-700 border-gray-200",
+                  )}
+                >
+                  {loggedUser.plan === "premium" ? t.planPremium : t.planFree}
+                </Badge>
+              </div>
+              <p className="text-xs text-sidebar-foreground/60 truncate">
+                {loggedUser.email}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Bottom section */}
       <div className="border-t border-sidebar-border p-4 space-y-2">
         {bottomSections.map((section) => (
