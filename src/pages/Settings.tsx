@@ -112,6 +112,75 @@ export default function Settings() {
     window.history.back();
   };
 
+  const handleAvatarUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validações
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Arquivo muito grande",
+        description: "A imagem deve ter no máximo 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Formato inválido",
+        description: "Por favor, selecione uma imagem válida.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+
+    try {
+      // Converter para base64 para simular upload
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64 = e.target?.result as string;
+        updateSetting("avatar", base64);
+        setHasChanges(true);
+
+        toast({
+          title: "Foto atualizada!",
+          description: "Sua foto de perfil foi alterada com sucesso.",
+        });
+
+        setIsUploadingAvatar(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Erro ao fazer upload:", error);
+      toast({
+        title: "Erro no upload",
+        description: "Não foi possível atualizar sua foto. Tente novamente.",
+        variant: "destructive",
+      });
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    const confirm = window.confirm(
+      "Tem certeza que deseja remover sua foto de perfil?",
+    );
+    if (confirm) {
+      updateSetting("avatar", null);
+      setHasChanges(true);
+
+      toast({
+        title: "Foto removida",
+        description: "Sua foto de perfil foi removida.",
+      });
+    }
+  };
+
   const handleSaveSettings = async () => {
     setIsSaving(true);
 
