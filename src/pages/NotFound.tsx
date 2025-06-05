@@ -23,24 +23,24 @@ const NotFound = () => {
           </div>
           <h1 className="text-6xl font-bold text-burnt-700 mb-4">404</h1>
           <h2 className="text-2xl font-semibold text-foreground mb-2">
-            Page Not Found
+            Página Não Encontrada
           </h2>
           <p className="text-muted-foreground mb-8">
-            The page you're looking for doesn't exist or has been moved.
+            A página que você está procurando não existe ou foi movida.
           </p>
           <Button
             onClick={() => window.history.back()}
             className="mr-3 bg-gradient-to-r from-burnt-500 to-terracotta-600 hover:from-burnt-600 hover:to-terracotta-700"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Go Back
+            Voltar
           </Button>
           <Button
             variant="outline"
             onClick={() => (window.location.href = "/")}
             className="border-burnt-300 text-burnt-600 hover:bg-burnt-50"
           >
-            Home
+            Início
           </Button>
         </div>
       </div>
