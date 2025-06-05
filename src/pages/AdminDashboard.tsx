@@ -556,7 +556,7 @@ export default function AdminDashboard() {
                             Backup concluído
                           </p>
                           <p className="text-xs text-green-700">
-                            Último backup: hoje ��s 03:00
+                            Último backup: hoje às 03:00
                           </p>
                         </div>
                       </div>
@@ -636,20 +636,29 @@ export default function AdminDashboard() {
                                     ? "Banir"
                                     : "Ativar"}
                                 </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() =>
-                                    handleUserAction(
-                                      user.id,
-                                      user.plan === "free" ? "premium" : "free",
-                                    )
-                                  }
-                                >
-                                  {user.plan === "free"
-                                    ? "Premium"
-                                    : "Gratuito"}
-                                </Button>
+                                {user.plan === "free" ? (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                                    onClick={() =>
+                                      handlePromoteToPremium(user.id)
+                                    }
+                                  >
+                                    <Crown className="h-3 w-3 mr-1" />
+                                    Promover Premium
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      handleUserAction(user.id, "free")
+                                    }
+                                  >
+                                    Rebaixar para Gratuito
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="destructive"
