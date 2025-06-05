@@ -11,28 +11,24 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Inicia colapsa por padrão
   const [isHovering, setIsHovering] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Auto-collapse sidebar when clicking outside (but not when hovering)
+  // Auto-collapse sidebar when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        sidebarRef.current &&
-        !sidebarRef.current.contains(event.target as Node) &&
-        !sidebarCollapsed &&
-        !isHovering
-      ) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
         setSidebarCollapsed(true);
+        setIsHovering(false); // Reset hover state
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [sidebarCollapsed, isHovering]);
+  }, []);
 
   return (
     <div className="flex h-screen bg-background">
@@ -49,17 +45,29 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div
         ref={sidebarRef}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 transform transition-all duration-500 ease-out lg:relative lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          sidebarCollapsed && !isHovering ? "w-16" : "w-64",
+          (sidebarCollapsed && !isHovering) ? "w-16" : "w-64"
         )}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
+        onMouseEnter={() => {
+          setIsHovering(true);
+        }}
+        onMouseLeave={() => {
+          // Não colapsa automaticamente quando o mouse sai
+          // Mantém expandida até clicar fora
+          setIsHovering(false);
+        }}
+      >
       >
         <Sidebar
           onClose={() => setSidebarOpen(false)}
           isCollapsed={sidebarCollapsed && !isHovering}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onToggleCollapse={() => {
+            setSidebarCollapsed(!sidebarCollapsed);
+            if (!sidebarCollapsed) {
+              setIsHovering(false); // Reset hover ao colapsar manualmente
+            }
+          }}
         />
       </div>
 
