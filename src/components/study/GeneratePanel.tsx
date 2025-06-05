@@ -142,11 +142,11 @@ export function GeneratePanel() {
                 htmlFor="title"
                 className="text-sm font-medium text-foreground"
               >
-                Title (Optional)
+                Título (Opcional)
               </Label>
               <Input
                 id="title"
-                placeholder="Enter a title for your study material"
+                placeholder="Digite um título para seu material de estudo"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="mt-1"
@@ -159,18 +159,17 @@ export function GeneratePanel() {
                 htmlFor="content"
                 className="text-sm font-medium text-foreground"
               >
-                Content
+                Conteúdo
               </Label>
               <Textarea
                 id="content"
-                placeholder="Paste your study content here, or upload files below..."
+                placeholder="Cole seu conteúdo de estudo aqui, ou envie arquivos abaixo..."
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 className="mt-1 min-h-[200px] resize-none"
                 disabled={isGenerating}
               />
             </div>
-
             <div
               className={cn(
                 "border-2 border-dashed rounded-lg p-6 md:p-8 text-center transition-all duration-200",
@@ -185,24 +184,24 @@ export function GeneratePanel() {
             >
               <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground mb-2">
-                <strong>Drop files here</strong> or{" "}
+                <strong>Solte os arquivos aqui</strong> ou{" "}
                 <Button
                   variant="link"
                   className="h-auto p-0 text-burnt-600 hover:text-burnt-700"
                   disabled={isGenerating}
                 >
-                  browse to upload
+                  clique para enviar
                 </Button>
               </p>
               <p className="text-xs text-muted-foreground">
-                Supports PDF, DOCX, and TXT files
+                Suporta arquivos PDF, DOCX e TXT
               </p>
             </div>
           </div>
 
           <div>
             <Label className="text-sm font-medium text-foreground mb-4 block">
-              Select Output Types
+              Selecionar Tipos de Saída
             </Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {outputTypes.map((type) => (
