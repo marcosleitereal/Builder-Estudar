@@ -425,8 +425,15 @@ export function Sidebar({
           )}
         >
           {/* Avatar */}
-          <div className="flex-shrink-0">
-            <div className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-full flex items-center justify-center">
+          <div className="flex-shrink-0 relative group">
+            <div
+              className="w-10 h-10 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
+              title={
+                isCollapsed
+                  ? `${loggedUser.name} (${loggedUser.plan === "premium" ? t.planPremium : t.planFree})`
+                  : undefined
+              }
+            >
               {loggedUser.avatar ? (
                 <img
                   src={loggedUser.avatar}
@@ -437,6 +444,20 @@ export function Sidebar({
                 <User className="h-5 w-5 text-white" />
               )}
             </div>
+
+            {/* Badge do plano - aparece no canto quando colapsada */}
+            {isCollapsed && (
+              <div
+                className={cn(
+                  "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold",
+                  loggedUser.plan === "premium"
+                    ? "bg-yellow-400 text-yellow-900"
+                    : "bg-gray-400 text-gray-900",
+                )}
+              >
+                {loggedUser.plan === "premium" ? "P" : "F"}
+              </div>
+            )}
           </div>
 
           {/* User Info - só mostra quando expandida */}
