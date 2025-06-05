@@ -6,28 +6,28 @@ export function QuickStats() {
     {
       icon: Brain,
       value: "24",
-      label: "Study Sessions",
+      label: "Sessões de Estudo",
       color: "text-burnt-600",
       bgColor: "bg-burnt-100",
     },
     {
       icon: Target,
       value: "89%",
-      label: "Accuracy Rate",
+      label: "Taxa de Acerto",
       color: "text-terracotta-600",
       bgColor: "bg-terracotta-100",
     },
     {
       icon: Clock,
       value: "12h",
-      label: "Study Time",
+      label: "Tempo de Estudo",
       color: "text-sandstone-700",
       bgColor: "bg-sandstone-100",
     },
     {
       icon: Trophy,
       value: "8",
-      label: "Achievements",
+      label: "Conquistas",
       color: "text-burnt-700",
       bgColor: "bg-burnt-100",
     },
@@ -36,7 +36,7 @@ export function QuickStats() {
   return (
     <div className="p-4 border-t border-sidebar-border">
       <h3 className="text-sm font-medium text-sidebar-foreground mb-3">
-        Your Progress
+        Seu Progresso
       </h3>
       <div className="grid grid-cols-2 gap-2">
         {stats.map((stat, index) => (
