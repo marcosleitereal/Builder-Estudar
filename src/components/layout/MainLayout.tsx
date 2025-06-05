@@ -18,15 +18,18 @@ export function MainLayout({ children }: MainLayoutProps) {
   // Auto-collapse sidebar when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         setSidebarCollapsed(true);
         setIsHovering(false); // Reset hover state
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -45,9 +48,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div
         ref={sidebarRef}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 transform transition-all duration-500 ease-out lg:relative lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 transform transition-all duration-500 ease-out lg:relative lg:translate-x-0 group",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
-          (sidebarCollapsed && !isHovering) ? "w-16" : "w-64"
+          sidebarCollapsed && !isHovering ? "w-16" : "w-64",
         )}
         onMouseEnter={() => {
           setIsHovering(true);
@@ -57,7 +60,6 @@ export function MainLayout({ children }: MainLayoutProps) {
           // Mantém expandida até clicar fora
           setIsHovering(false);
         }}
-      >
       >
         <Sidebar
           onClose={() => setSidebarOpen(false)}
