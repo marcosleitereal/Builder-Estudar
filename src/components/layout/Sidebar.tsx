@@ -48,7 +48,11 @@ export function Sidebar({ onClose }: SidebarProps) {
   };
 
   const getLanguageFlag = () => {
-    return currentLanguage === 'pt-BR' ? <BrazilFlag size={16} /> : <USAFlag size={16} />;
+    return currentLanguage === "pt-BR" ? (
+      <BrazilFlag size={16} />
+    ) : (
+      <USAFlag size={16} />
+    );
   };
 
   const getLanguageInfo = () => {
@@ -168,8 +172,6 @@ export function Sidebar({ onClose }: SidebarProps) {
     {
       title: t.language,
       icon: Languages,
-      subtitle: getLanguageDisplay(),
-      flag: getLanguageFlag(),
       onClick: toggleLanguage,
       isLanguageSelector: true,
     },
@@ -253,7 +255,7 @@ export function Sidebar({ onClose }: SidebarProps) {
                     >
                       <child.icon className="mr-3 h-3 w-3" />
                       <span className="flex-1 text-left">{child.title}</span>
-                      {child.count && (
+                      {child.count !== undefined && (
                         <span className="ml-auto text-xs text-muted-foreground">
                           {child.count}
                         </span>
@@ -287,26 +289,23 @@ export function Sidebar({ onClose }: SidebarProps) {
           >
             <section.icon className="mr-3 h-4 w-4" />
             <div className="flex-1 text-left">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between">
                 <span>{section.title}</span>
                 {section.isLanguageSelector && (
-                  <div className="ml-auto flex items-center gap-2 px-2 py-1 bg-burnt-100 rounded-md">
+                  <div className="flex items-center gap-2 px-2 py-1 bg-burnt-100 rounded-md">
                     {getLanguageFlag()}
                     <span className="text-xs font-medium text-burnt-700">
-                      {currentLanguage === 'pt-BR' ? 'PT' : 'EN'}
+                      {currentLanguage === "pt-BR" ? "PT" : "EN"}
                     </span>
                   </div>
                 )}
-              {section.subtitle && !section.isLanguageSelector && (
-                <div className="text-xs text-sidebar-foreground/60">
-                  {section.subtitle}
-                </div>
-              )}
+              </div>
               {section.isLanguageSelector && (
                 <div className="text-xs text-sidebar-foreground/60 mt-1">
-                  {currentLanguage === 'pt-BR' ? 'Clique para alterar para English' : 'Click to change to Português'}
+                  {currentLanguage === "pt-BR"
+                    ? "Clique para alterar para English"
+                    : "Click to change to Português"}
                 </div>
-              )}
               )}
             </div>
           </Button>
