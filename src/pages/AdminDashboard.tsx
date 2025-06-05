@@ -1774,10 +1774,16 @@ export default function AdminDashboard() {
                           className={
                             newUser.plan === "premium"
                               ? "bg-yellow-100 text-yellow-700"
-                              : "bg-gray-100 text-gray-700"
+                              : newUser.plan === "premium-admin"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-700"
                           }
                         >
-                          {newUser.plan === "premium" ? "Premium" : "Gratuito"}
+                          {newUser.plan === "premium"
+                            ? "Premium"
+                            : newUser.plan === "premium-admin"
+                              ? "Premium Gratuito"
+                              : "Gratuito"}
                         </Badge>
                         {newUser.role === "admin" && (
                           <Badge className="bg-red-100 text-red-700">
