@@ -393,14 +393,17 @@ export default function AdminDashboard() {
 
       setShowNewUserModal(false);
 
-      const roleText =
-        newUser.role === "admin"
-          ? "Administrador"
-          : newUser.plan === "premium"
-            ? "Premium"
+      const roleText = newUser.role === "admin" ? "Administrador" : "Usuário";
+      const planText =
+        newUser.plan === "premium"
+          ? "Premium"
+          : newUser.plan === "premium-admin"
+            ? "Premium Gratuito"
             : "Gratuito";
 
-      alert(`Usuário ${newUser.name} (${roleText}) criado com sucesso!`);
+      alert(
+        `Usuário ${newUser.name} (${roleText} - ${planText}) criado com sucesso!`,
+      );
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
       alert("Erro ao criar usuário. Tente novamente.");
