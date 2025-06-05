@@ -188,7 +188,7 @@ export default function AdminDashboard() {
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
-    plan: "free" as "free" | "premium",
+    plan: "free" as "free" | "premium" | "premium-admin",
     role: "user" as "user" | "admin",
     password: "",
     confirmPassword: "",
