@@ -9,6 +9,7 @@ import {
   Languages,
   ChevronDown,
   ChevronRight,
+  ChevronLeft,
   FileText,
   Brain,
   Lightbulb,
@@ -29,9 +30,15 @@ import { BrazilFlag, USAFlag } from "@/components/ui/flags";
 
 interface SidebarProps {
   onClose?: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export function Sidebar({ onClose }: SidebarProps) {
+export function Sidebar({
+  onClose,
+  isCollapsed = false,
+  onToggleCollapse,
+}: SidebarProps) {
   const [studyHistoryOpen, setStudyHistoryOpen] = useState(true);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
@@ -188,7 +195,12 @@ export function Sidebar({ onClose }: SidebarProps) {
   ];
 
   return (
-    <div className="h-full bg-sidebar border-r border-sidebar-border flex flex-col">
+    <div
+      className={cn(
+        "h-full bg-sidebar border-r border-sidebar-border flex flex-col transition-all duration-300",
+        isCollapsed ? "w-16" : "w-64",
+      )}
+    >
       {/* Header */}
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center justify-between">
@@ -196,20 +208,42 @@ export function Sidebar({ onClose }: SidebarProps) {
             <div className="w-8 h-8 bg-gradient-to-br from-burnt-500 to-terracotta-600 rounded-lg flex items-center justify-center">
               <Brain className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-sidebar-foreground">
-              StudyAI
-            </h1>
+            {!isCollapsed && (
+              <h1 className="text-xl font-bold text-sidebar-foreground">
+                StudyAI
+              </h1>
+            )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="lg:hidden text-sidebar-foreground hover:bg-sidebar-accent"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            {onToggleCollapse && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onToggleCollapse}
+                className="hidden lg:flex text-sidebar-foreground hover:bg-sidebar-accent"
+              >
+                {isCollapsed ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="lg:hidden text-sidebar-foreground hover:bg-sidebar-accent"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-        <p className="text-sm text-sidebar-foreground/70 mt-1">{t.platform}</p>
+        {!isCollapsed && (
+          <p className="text-sm text-sidebar-foreground/70 mt-1">
+            {t.platform}
+          </p>
+        )}
       </div>
 
       {/* Navigation */}
@@ -232,29 +266,33 @@ export function Sidebar({ onClose }: SidebarProps) {
                   }
                 }}
               >
-                <section.icon className="mr-3 h-4 w-4" />
-                <span
-                  className="flex-1 text-left cursor-pointer"
-                  onClick={(e) => {
-                    if (section.isExpandable && section.onClick) {
-                      e.stopPropagation();
-                      section.onClick();
-                    }
-                  }}
-                >
-                  {section.title}
-                </span>
-                {section.badge && (
+                <section.icon
+                  className={cn("h-4 w-4", !isCollapsed && "mr-3")}
+                />
+                {!isCollapsed && (
+                  <span
+                    className="flex-1 text-left cursor-pointer"
+                    onClick={(e) => {
+                      if (section.isExpandable && section.onClick) {
+                        e.stopPropagation();
+                        section.onClick();
+                      }
+                    }}
+                  >
+                    {section.title}
+                  </span>
+                )}
+                {!isCollapsed && section.badge && (
                   <span className="ml-auto bg-burnt-500 text-white text-xs px-2 py-0.5 rounded-full">
                     {section.badge}
                   </span>
                 )}
-                {section.count && (
+                {!isCollapsed && section.count && (
                   <span className="ml-auto bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded-full">
                     {section.count}
                   </span>
                 )}
-                {section.isExpandable && (
+                {!isCollapsed && section.isExpandable && (
                   <div
                     className="ml-2 cursor-pointer hover:bg-sidebar-accent rounded p-1 -m-1"
                     onClick={(e) => {
@@ -272,7 +310,7 @@ export function Sidebar({ onClose }: SidebarProps) {
               </Button>
 
               {/* Expandable children */}
-              {section.children && section.isOpen && (
+              {!isCollapsed && section.children && section.isOpen && (
                 <div className="ml-6 mt-2 space-y-1">
                   {section.children.map((child) => (
                     <Button
@@ -306,7 +344,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Quick Stats */}
-      <QuickStats language={currentLanguage} />
+      {!isCollapsed && <QuickStats language={currentLanguage} />}
 
       {/* Bottom section */}
       <div className="border-t border-sidebar-border p-4 space-y-2">
@@ -323,27 +361,29 @@ export function Sidebar({ onClose }: SidebarProps) {
             )}
             onClick={section.onClick}
           >
-            <section.icon className="mr-3 h-4 w-4" />
-            <div className="flex-1 text-left">
-              <div className="flex items-center justify-between">
-                <span>{section.title}</span>
+            <section.icon className={cn("h-4 w-4", !isCollapsed && "mr-3")} />
+            {!isCollapsed && (
+              <div className="flex-1 text-left">
+                <div className="flex items-center justify-between">
+                  <span>{section.title}</span>
+                  {section.isLanguageSelector && (
+                    <div className="flex items-center gap-2 px-2 py-1 bg-burnt-100 rounded-md">
+                      {getLanguageFlag()}
+                      <span className="text-xs font-medium text-burnt-700">
+                        {currentLanguage === "pt-BR" ? "PT" : "EN"}
+                      </span>
+                    </div>
+                  )}
+                </div>
                 {section.isLanguageSelector && (
-                  <div className="flex items-center gap-2 px-2 py-1 bg-burnt-100 rounded-md">
-                    {getLanguageFlag()}
-                    <span className="text-xs font-medium text-burnt-700">
-                      {currentLanguage === "pt-BR" ? "PT" : "EN"}
-                    </span>
+                  <div className="text-xs text-sidebar-foreground/60 mt-1">
+                    {currentLanguage === "pt-BR"
+                      ? "Clique para alterar para English"
+                      : "Click to change to Português"}
                   </div>
                 )}
               </div>
-              {section.isLanguageSelector && (
-                <div className="text-xs text-sidebar-foreground/60 mt-1">
-                  {currentLanguage === "pt-BR"
-                    ? "Clique para alterar para English"
-                    : "Click to change to Português"}
-                </div>
-              )}
-            </div>
+            )}
           </Button>
         ))}
       </div>
