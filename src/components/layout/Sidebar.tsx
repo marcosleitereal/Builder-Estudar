@@ -543,7 +543,7 @@ export function Sidebar({
             )}
           </div>
 
-          {/* User Info - só mostra quando expandida */}
+          {/* Badge do plano - aparece no canto quando colapsada */}
             {isCollapsed && (
               <div className={cn(
                 "absolute -top-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-xs font-bold",
@@ -553,6 +553,18 @@ export function Sidebar({
                   ? "bg-green-400 text-green-900"
                   : "bg-gray-400 text-gray-900"
               )}>
+                {loggedUser.plan === "premium" ? "P" : loggedUser.plan === "premium-admin" ? "G" : "F"}
+              </div>
+            )}
+          </div>
+
+          {/* User Info - só mostra quando expandida */}
+          {!isCollapsed && (
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-sm font-medium text-sidebar-foreground truncate">
+                  {loggedUser.name}
+                </p>
                 <Badge
                   className={cn(
                     "text-xs px-2 py-0.5",
